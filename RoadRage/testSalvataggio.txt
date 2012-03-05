@@ -1,0 +1,4 @@
+Node;Node 1;80;80
+Node;Node 2;180;80
+Link;Node 2;Node 1;15
+Link;Node 1;Node 2;12

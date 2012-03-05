@@ -1,0 +1,75 @@
+0=lowest, 5=highest
+
+priorità  5
+01) (DONE)aggiungere la dialog UpdateLinkDialog
+02) (DONE)scrivere il codice cliente della UpdateLinkDialog
+08) (DONE)inserire il calcolo di Dijkstra all'interno del compilato
+
+priorità  4
+06) (DONE)aggiungere il salvataggio del grafo (su file TXT)
+07) (DONE)aggiungere l'apertura del grafo salvato (su file TXT)
+11) (DONE)aggiungere la possibilità di scegliere i nodi senza necessariamente
+    dover cliccare
+    *done*: implementato nel NodesSelectorDialog
+
+priorità  3
+08) (DONE)inserire il calcolo di Dijkstra all'interno del compilato
+   SPOSTATO A PRIORITA' 5
+12) (DONE)cancellare i QGraphicsItem quando si cambia il grafo da esaminare
+    *fixed*: talvolta genera problemi di SIGSEV, la causa è nel GIH e la gestione dei nodi.
+              elaborare.
+              12.1) si è riusciti attualmente a far crashare di meno la generazione del
+                    report, ma il problema persiste attualmente solo nel caso in cui si
+                    cancellino uno o più nodi.
+              *fixed*: alla fine il problema era generato dalla *non cancellazione* del nodo,
+                        che è presente nel gestore del grafo ma è un puntatore che non ha
+                        informazioni, provocando quindi SIGILL o SIGSEV quando si tenta di accedere
+                        a campi non disponibili
+13) (DONE)implementare una dialog che mostri in tempo reale la distanza tra
+    due nodi. la dialog può essere sostituita direttamente da due QComboBox
+    inserite nella finestra principale
+    *done*: questa informazione è presente nel NodesSelectorDialog
+17) (DONE):strutturare meglio il report, facendo in modo che sia possibile nascondere alcune
+    parti del report, attraverso qualche parte scritta in JavaScript (dato che il report
+    HTML viene generato in maniera del tutto automatica tramite codice (come CGI)
+    basta aggiungere uno script nella zona HEAD, tra i tag SCRIPT).
+    fatti dei test, si... può... fare! :D
+    *done*: creato nel bugfix4, permette di restringere tutta la parte relativa ad un
+            singolo nodo, in modo da risparmiare spazio nella pagina. benedette siano le
+            Qt, che hanno al loro interno un motore webkit :D
+
+priorità  2
+03) (DONE)fare in modo di aprire il report in una dialog apposita
+04) (WONTADD)modificare il programma python
+    *wontadd*: calcolo e generazione del report è interamente svolta
+               all'interno del compilato, rendendoci quindi indipendenti
+               da script esterni
+19) aggiungere/modificare la descrizione del singolo nodo (@giulio)
+20) (DONE)invertire ordine di due nodi
+    *done*: assegnato a giulio, è stato svolto da alessandro.
+
+priorità  1
+09) (DONE)fare in modo che il report HTML sia salvabile in altre locazioni
+10) (DONE)aggiungere colorazione al report
+16) (DONE)aggiungere il percorso da un nodo all'altro nel report
+14) (WONTADD)far scegliere all'utente se ottenere un report con il cammino di peso
+    minore o di peso maggiore. devo fare alcune prove, ma ritengo che sia possibile
+    che l'algoritmo opportunamente modificato possa supportare questa modifica!
+    *wontadd*: facendo qualche prova con il programma Python già esistente non funziona.
+               essendo questa una nuova feature non importante (ovvero di priorità >=3)
+               preferisco evitarne l'inserimento.
+
+priorità  0
+05) (WONTADD)creare un installer con InnoSetup
+    *wontadd*: compile from source is better :D
+15) (WONTADD)sperimentare l'inserimento di una QTableView nel ReportViewerDialog. Dettagli ancora
+    da decidere.
+    *wontadd*: non ne necessitiamo, dato che abbiamo un report
+18) (DONE)aggiungi il percorso del grafo in esame e un asterisco per indicare la modifica
+
+
+
+
+
+singolo file .h da importare, che include tutti i vari nomi di constraint con relativi puntatori a GUI
+e vincoli. serve per poter "riempire" il menu per la scelta dei vincoli
