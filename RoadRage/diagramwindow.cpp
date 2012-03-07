@@ -754,20 +754,26 @@ void DiagramWindow::getTSPSlot()
     }
     cout<<"asking solutions!"<<endl;
     bts.getSolutions(starting, &solutions);
-    cout<<"solutions are:"<<endl;
-    Path shortest=solutions.at(0);
-    unsigned int bestPathLength=gih->getLengthOfPath(shortest);
-    for(int i=0; i<solutions.size(); i++)
+    unsigned int bestPathLength;
+    if(solutions.size()!=0)
     {
-        Path act=solutions.at(i);
-        act.print();
-        unsigned int newLength=gih->getLengthOfPath(act);
-        if(newLength<bestPathLength)
+        cout<<"solutions are:"<<endl;
+        Path shortest=solutions.at(0);
+        bestPathLength=gih->getLengthOfPath(shortest);
+        for(int i=0; i<solutions.size(); i++)
         {
-            shortest=act;
-            bestPathLength=newLength;
+            Path act=solutions.at(i);
+            act.print();
+            unsigned int newLength=gih->getLengthOfPath(act);
+            if(newLength<bestPathLength && newLength!=0)
+            {
+                shortest=act;
+                bestPathLength=newLength;
+            }
         }
     }
+    else
+        cout<<"no solutions LOL"<<endl;
 
     QMessageBox::information(this, "ok, solved!", QString::number(solutions.size())+" solutions, best length is:"+QString::number(bestPathLength));
 }

@@ -34,20 +34,29 @@ bool Solver::rejectSolution(Path candidate)
 
 bool Solver::acceptSolution(Path candidate)
 {
+    /*
+      //original version: it's an EPIC FAIL
+      //it just does not control about *ALL* the
+      //constraint validation, but only ONE constraint.
+      //It's just wondering: there is _at least one_ constraint
+      //that says "this solution, in my opinion, is right" ?
     bool isAccepted=false;
-    //bool isAccepted=true;
-    //unsigned int isAccepted=1;
-//#pragma omp parallel for
     for(int i=0; i<this->acceptConstraints->size(); i++)
     {
-        //if(this->acceptConstraints->at(i)->isRespected(candidate))
-        //if(this->acceptConstraints->at(i)->isRespected(candidate)==false)
+        if(this->acceptConstraints->at(i)->isRespected(candidate))
             isAccepted=true;
-            //isAccepted=false;
-            //isAccepted*=0;
     }
     return isAccepted;
-    //return isAccepted==1?true:false;
+    */
+    unsigned int isAccepted=1;
+    for(int i=0; i<this->acceptConstraints->size(); i++)
+    {
+        if(!this->acceptConstraints->at(i)->isRespected(candidate))
+        {
+            isAccepted*=0;
+        }
+    }
+    return isAccepted==1;
 }
 
 void Solver::addAcceptConstraint(Constraint *newConstraint)
