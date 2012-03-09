@@ -24,12 +24,12 @@ public:
     QVector<unsigned int> getPath();
     void appendPoint(unsigned int point);
 
-    void nextCandidates(QVector<Path> *nextCandidates);
+    //void nextCandidates(QVector<Path> *nextCandidates);
 
     void print()
     {
         cout<<"path is: ";
-        for(unsigned int i=0; i<this->path.size(); i++)
+        for(int i=0; i<this->path.size(); i++)
             cout<<this->path.at(i)<<" ";
         cout<<endl;
     }

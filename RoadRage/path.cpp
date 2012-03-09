@@ -35,6 +35,7 @@ void Path::appendPoint(unsigned int point)
 }
 
 
+/*
 void Path::nextCandidates(QVector<Path> *nextCandidates)
 {
     for(unsigned int i=0; i<this->MAX_NODES; i++)
@@ -50,7 +51,7 @@ void Path::nextCandidates(QVector<Path> *nextCandidates)
         nextCandidates->append(newsol);
     }
 }
-
+*/
 
 
 

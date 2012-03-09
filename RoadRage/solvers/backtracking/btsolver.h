@@ -17,6 +17,11 @@ private:
     QVector<Constraint*> *acceptConstraints;
     QVector<Constraint*> *rejectConstraints;
 */
+private:
+    QStack<Path> *candidateSolutionsStack;
+
+    void addNewSolutions(Path startPath);
+
 public:
     BTSolver();
 

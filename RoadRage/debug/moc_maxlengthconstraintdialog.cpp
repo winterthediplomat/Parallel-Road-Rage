@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'maxlengthconstraintdialog.h'
 **
-** Created: Mon 27. Feb 13:02:38 2012
+** Created: Fri 9. Mar 17:01:30 2012
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!

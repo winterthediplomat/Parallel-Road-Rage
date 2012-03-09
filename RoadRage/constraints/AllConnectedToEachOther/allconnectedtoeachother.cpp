@@ -45,8 +45,7 @@ bool AllConnectedToEachOther::isRespected(Path candidate)
     Link* the_link=NULL;
     bool allConnected=true;
     int candidateNodeNum=candidate.getPath().size();
-    //the risk is possible...
-    //Q_ASSERT_X(this->gih!=0 && this->gih!=0xbaadf00d, "AllConnected::isRespected", "saved gih obj is not right (maybe corrupted?)");
+
     for(int index=0; index<candidateNodeNum-1; index++)
     {
         firstNode=candidate.getPath().at(index);

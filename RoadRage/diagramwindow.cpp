@@ -754,13 +754,15 @@ void DiagramWindow::getTSPSlot()
     }
     cout<<"asking solutions!"<<endl;
     bts.getSolutions(starting, &solutions);
+    cout<<"solutions.size() outside is: "<<solutions.size()<<endl;
     unsigned int bestPathLength;
-    if(solutions.size()!=0)
+    //if(solutions.size()!=0 || &solutions.at(0)!=NULL)
+    if(solutions.size()!=0 || solutions.size()!=1)
     {
         cout<<"solutions are:"<<endl;
         Path shortest=solutions.at(0);
         bestPathLength=gih->getLengthOfPath(shortest);
-        for(int i=0; i<solutions.size(); i++)
+        for(int i=1; i<solutions.size(); i++)
         {
             Path act=solutions.at(i);
             act.print();

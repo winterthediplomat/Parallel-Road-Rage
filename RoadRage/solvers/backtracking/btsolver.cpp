@@ -13,17 +13,32 @@ BTSolver::BTSolver() : Solver()
     this->rejectConstraints=new QVector<Constraint*>;
 }
 
+void BTSolver::addNewSolutions(Path startSolution)
+{
+    cout<<"adding a solution!"<<startSolution.getNodes()<<endl;
+    for(unsigned int i=0; i<startSolution.getNodes(); i++)
+    {
+        Path newsol(startSolution.getNodes(), startSolution.getPath());
+        for(unsigned int j=0; j<startSolution.getNodes();j++)
+            newsol.addName(startSolution.getNameByPoint(j));
+        newsol.appendPoint(i);
+        #pragma omp critical
+        {this->candidateSolutionsStack->push(newsol);}
+    }
+}
+
 void BTSolver::getSolutions(Path startSolution, QVector<Path> *solutions)
 {
     //QVector<Path>* solutions=new QVector<Path>();
-    QStack<Path> *candidateSolutionsStack=new QStack<Path>();
+    this->candidateSolutionsStack=new QStack<Path>();
 
     //initialize stack of candidate solutions with a solution
     //that could be empty of partially fulled.
     candidateSolutionsStack->push(startSolution);
     unsigned int solutionCounter=0;
     //find solutions
-    Path actualCandidate=NULL;
+    Path actualCandidate=Path(0);
+    //bool isRetrieved;
     QVector<Path> *nexts;
 
 #pragma omp parallel private(actualCandidate, nexts) num_threads(2)
@@ -46,6 +61,7 @@ void BTSolver::getSolutions(Path startSolution, QVector<Path> *solutions)
 
        #pragma omp critical
        {
+           //isRetrieved=true;
            cout<< omp_get_thread_num() <<"retrieving a solution..."<<endl;
            if(!candidateSolutionsStack->isEmpty())
            {
@@ -55,33 +71,37 @@ void BTSolver::getSolutions(Path startSolution, QVector<Path> *solutions)
            }
            else
            {
-               actualCandidate=NULL;
+               //cout<<"not retrieved, creating a path with 0 max length"<<endl;
+               actualCandidate=Path(0);
+               cout<<"not retrieved"<<endl;
+               //isRetrieved=false;
+               //actualCandidate=NULL;
            }
        }
 
+       //cout<<&actualCandidate<<endl;
 
-
-        if(!this->rejectSolution(actualCandidate))
-        {
-            //cout<<"ok, this solution is interesting..."<<endl;
-            if(!this->acceptSolution(actualCandidate))
-            {
-                //now generate next candidate solutions
-//                cout<<omp_get_thread_num()<<"adding new solutions..."<<endl;
+       if(actualCandidate.getNodes()!=0 && !this->rejectSolution(actualCandidate))
+       {
+           //cout<<"ok, this solution is interesting..."<<endl;
+           if(!this->acceptSolution(actualCandidate))
+           {
+                addNewSolutions(actualCandidate);
+                /*
                 #pragma omp critical
                 {
                     nexts=new QVector<Path>();
                     actualCandidate.nextCandidates(nexts);
-//                    cout<<omp_get_thread_num()<<"-"<<nexts->size()<<" candidate solutions are been created!"<<endl;
-
-                for(int i=0; i<nexts->size(); i++)
-                {
-                    if(nexts->isEmpty() && nexts->size()==0)
-                        cout<<"wat?"<<endl;
-                    candidateSolutionsStack->push(nexts->at(i));
-                }
-                nexts=NULL; //free space of next candidate solutions
+                    for(int i=0; i<nexts->size(); i++)
+                    {
+                        if(nexts->isEmpty() && nexts->size()==0)
+                            cout<<"wat?"<<endl;
+                        candidateSolutionsStack->push(nexts->at(i));
+                    }
+                    delete nexts;
+                    nexts=NULL; //free space of next candidate solutions
                 }   //end #pragma omp critical
+                */
              }
 
             else
