@@ -39,9 +39,9 @@ void BTSolver::getSolutions(Path startSolution, QVector<Path> *solutions)
     //find solutions
     Path actualCandidate=Path(0);
     //bool isRetrieved;
-    QVector<Path> *nexts;
+    //QVector<Path> *nexts;
 
-#pragma omp parallel private(actualCandidate, nexts) num_threads(2)
+#pragma omp parallel private(actualCandidate/*, nexts*/) num_threads(2)
 {
 
     #pragma omp master
@@ -107,9 +107,6 @@ void BTSolver::getSolutions(Path startSolution, QVector<Path> *solutions)
             else
             {
                 //save solution
-                actualCandidate.print();
-                //cout<<"found a solution!"<<endl;
-                //cout<<"actual solutions: "<<solutions->size()+1<<endl;
                 solutionCounter++;
                 #pragma omp critical
                 {
@@ -126,6 +123,15 @@ void BTSolver::getSolutions(Path startSolution, QVector<Path> *solutions)
                 cout<<actualCandidate.getPath().at(pos);
             cout<<endl;*/
         }
+
+
+    //barrier is needed to avoid death of other threads,
+    //so the first thread that catches the solution can put
+    //new solutions while others wait there, and
+    //candidateSolutionsStack is not empty.
+    #pragma omp barrier
+    cout<<"ok, over the barrier!"<<endl;
+
     }while(!candidateSolutionsStack->isEmpty());
 } //end #pragma omp parallel
     cout<<"fuori"<<endl;

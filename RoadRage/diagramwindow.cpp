@@ -726,7 +726,7 @@ void DiagramWindow::getTSPSlot()
 {
 
     BTSolver bts;
-    ////  old way!
+    ////old way!
     ////AllDifferentElementsConstraint *adec=new AllDifferentElementsConstraint();
     ////MaxLengthConstraint* mlc=new MaxLengthConstraint();
     ////mlc->setMaxLength(3);
@@ -755,12 +755,14 @@ void DiagramWindow::getTSPSlot()
     cout<<"asking solutions!"<<endl;
     bts.getSolutions(starting, &solutions);
     cout<<"solutions.size() outside is: "<<solutions.size()<<endl;
-    unsigned int bestPathLength;
+    unsigned int bestPathLength=INT_MAX;
     //if(solutions.size()!=0 || &solutions.at(0)!=NULL)
-    if(solutions.size()!=0 || solutions.size()!=1)
+    //if(solutions.size()!=0 || solutions.size()!=1)
+    if(solutions.size()!=0 && &solutions.at(0)!=NULL)
     {
         cout<<"solutions are:"<<endl;
         Path shortest=solutions.at(0);
+        shortest.print();
         bestPathLength=gih->getLengthOfPath(shortest);
         for(int i=1; i<solutions.size(); i++)
         {
@@ -776,10 +778,8 @@ void DiagramWindow::getTSPSlot()
     }
     else
         cout<<"no solutions LOL"<<endl;
-
-    QMessageBox::information(this, "ok, solved!", QString::number(solutions.size())+" solutions, best length is:"+QString::number(bestPathLength));
+    QMessageBox::information(this, "ok, solved!", QString::number(solutions.size())+" solutions"/*", best length is:"+QString::number(bestPathLength)*/);
 }
-
 
 void DiagramWindow::getDistanceSlot()
 {
@@ -795,5 +795,3 @@ void DiagramWindow::chooseConstraintSlot()
     ConstraintChooserDialog ccd(this->gih, this);
     ccd.exec();
 }
-
-

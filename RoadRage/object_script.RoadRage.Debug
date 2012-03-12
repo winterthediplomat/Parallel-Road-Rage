@@ -26,6 +26,10 @@ INPUT(
 ./debug\allconnectedtoeachotherconstraintinterface.o
 ./debug\lastpointconnectedtofirstconstraintinterface.o
 ./debug\lastpointconnectedtofirstconstraint.o
+./debug\startfrompointconstraint.o
+./debug\startfrompointconstraintinterface.o
+./debug\solverinterface.o
+./debug\btsolverinterface.o
 ./debug\moc_updatelinkdialog.o
 ./debug\moc_propertiesdialog.o
 ./debug\moc_linkinfodialog.o

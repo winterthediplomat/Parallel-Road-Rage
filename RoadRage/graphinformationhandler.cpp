@@ -12,10 +12,11 @@ using namespace std;
 #include "constraints/MaxLength/maxlengthconstraintinterface.h"
 #include "constraints/AllConnectedToEachOther/allconnectedtoeachotherconstraintinterface.h"
 #include "constraints/LastPointConnectedToFirst/lastpointconnectedtofirstconstraintinterface.h"
+#include "constraints/StartFromPoint/startfrompointconstraintinterface.h"
 //##################################################
 
 //################ SOLVERS #########################
-#include "solvers/backtracking/btsolver.h"
+#include "solvers/backtracking/btsolverinterface.h"
 //##################################################
 
 GraphInformationHandler::GraphInformationHandler()
@@ -41,12 +42,14 @@ GraphInformationHandler::GraphInformationHandler()
                                   new AllConnectedToEachOtherConstraintInterface(this));
     this->constraintNames->insert("LastPointConnectedToFirst",
                                   new LastPointConnectedToFirstConstraintInterface(this));
+    this->constraintNames->insert("StartFromPoint",
+                                  new StartFromPointConstraintInterface(this));
     //##################################################
 
     //########## solverNames initialization ############
-    this->solverNames=new QMap<QString, Solver*>;
+    this->solverNames=new QMap<QString, SolverInterface*>;
     this->solverNames->insert("BacktrackingTSPSolver",
-                              new BTSolver());
+                              new BTSolverInterface(this));
     //##################################################
 }
 
@@ -503,7 +506,6 @@ void GraphInformationHandler::launchConstraintDialog(QString constraintName)
       GIH::getConstraintDialog returns a Constraint object, I need a
       Constraint subclass object
     */
-    //if(this->constraintNames->value(constraintName)->hasUI())
     if(this->constraintNames->value(constraintName)->getDialog()!=NULL)
         this->constraintNames->value(constraintName)->getDialog()->exec();
     else
@@ -511,6 +513,7 @@ void GraphInformationHandler::launchConstraintDialog(QString constraintName)
         /*
           we need to ask user if new constraint is a Accept constraint
           or a Reject one.
+          EDIT: this check will be obsolete if I do it in ConstraintChooserDialog itself.
         */
         ConstraintPositionChooserDialog cpcd;
         Constraint* constraintObj=this->createConstraint(constraintName);
@@ -524,10 +527,26 @@ void GraphInformationHandler::launchConstraintDialog(QString constraintName)
             else
                 this->addRejectConstraint(constraintObj);
             QMessageBox::information(0, "added a constraint",
-                                     QString("added new constraint %1").arg(constraintName));
+                                     QString("added new constraint %1 as %2").arg(constraintName)
+                                           .arg(cpcd.isAccept?QString("accepted"):QString("rejected")));
         }
     }
 }
+
+
+void
+GraphInformationHandler::launchSolverDialog(QString solverName)
+{
+    cout<<"GIH::launchSolverDialog: called solverName: "<<solverName.toStdString()<<endl;
+    if(this->solverNames->value(solverName)->getDialog()!=NULL)
+        this->solverNames->value(solverName)->getDialog()->exec();
+    else
+    {
+        Solver* solverObj=this->solverNames->value(solverName)->getSolverObj();
+
+    }
+}
+
 
 unsigned int
 GraphInformationHandler::getLengthOfPath(Path examinedPath)
@@ -547,7 +566,10 @@ GraphInformationHandler::getLengthOfPath(Path examinedPath)
 
         if(!link)
             return INT_MAX;
+        //cout<<start->text().toStdString()<<" "<<end->text().toStdString()<<" "<<link->distance()<<endl;
+        //cout<<"lengthOfPath: "<<lengthOfPath<<endl;
         lengthOfPath+=link->distance();
     }
+    cout<<"total length: "<<lengthOfPath<<endl;
     return lengthOfPath;
 }

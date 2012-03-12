@@ -26,6 +26,10 @@ INPUT(
 ./release\allconnectedtoeachotherconstraintinterface.o
 ./release\lastpointconnectedtofirstconstraintinterface.o
 ./release\lastpointconnectedtofirstconstraint.o
+./release\startfrompointconstraint.o
+./release\startfrompointconstraintinterface.o
+./release\solverinterface.o
+./release\btsolverinterface.o
 ./release\moc_updatelinkdialog.o
 ./release\moc_propertiesdialog.o
 ./release\moc_linkinfodialog.o

@@ -35,8 +35,10 @@ void AllConnectedToEachOther::printName()
 
 bool AllConnectedToEachOther::isRespected(Path candidate)
 {
-    if(&candidate==0)
-        return false;
+    //needed in the past, when not retrieved solutions
+    //got a NULL adress
+    //if(&candidate==0)
+    //    return false;
     if(candidate.getPath().size()<2)
         return true;
 

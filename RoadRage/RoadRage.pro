@@ -33,7 +33,11 @@ SOURCES += main.cpp \
     constraints/AllConnectedToEachOther/allconnectedtoeachother.cpp \
     constraints/AllConnectedToEachOther/allconnectedtoeachotherconstraintinterface.cpp \
     constraints/LastPointConnectedToFirst/lastpointconnectedtofirstconstraintinterface.cpp \
-    constraints/LastPointConnectedToFirst/lastpointconnectedtofirstconstraint.cpp
+    constraints/LastPointConnectedToFirst/lastpointconnectedtofirstconstraint.cpp \
+    constraints/StartFromPoint/startfrompointconstraint.cpp \
+    constraints/StartFromPoint/startfrompointconstraintinterface.cpp \
+    solverinterface.cpp \
+    solvers/backtracking/btsolverinterface.cpp
 HEADERS += updatelinkdialog.h \
     ui_linkinfodialog.h \
     propertiesdialog.h \
@@ -60,7 +64,11 @@ HEADERS += updatelinkdialog.h \
     constraints/AllConnectedToEachOther/allconnectedtoeachother.h \
     constraints/AllConnectedToEachOther/allconnectedtoeachotherconstraintinterface.h \
     constraints/LastPointConnectedToFirst/lastpointconnectedtofirstconstraintinterface.h \
-    constraints/LastPointConnectedToFirst/lastpointconnectedtofirstconstraint.h
+    constraints/LastPointConnectedToFirst/lastpointconnectedtofirstconstraint.h \
+    constraints/StartFromPoint/startfrompointconstraint.h \
+    constraints/StartFromPoint/startfrompointconstraintinterface.h \
+    solverinterface.h \
+    solvers/backtracking/btsolverinterface.h
 OTHER_FILES += TODO.txt \
     testSalvataggio.txt
 FORMS += updatelinkdialog.ui \

@@ -9,7 +9,7 @@
 #include "linksdescriptor.h"
 
 #include "constraintinterface.h"
-#include "solver.h"
+#include "solverinterface.h"
 
 /*
 struct NodeInfo
@@ -70,6 +70,7 @@ public:
     QVector<Constraint*> getRejectedConstraints();
 
     void launchConstraintDialog(QString constraintName);
+    void launchSolverDialog(QString solverName);
 
     unsigned int getLengthOfPath(Path examinedPath);
 
@@ -83,7 +84,7 @@ private:
     QVector<Constraint*> rejectedConstraints;
 
     QMap<QString, ConstraintInterface*> *constraintNames;
-    QMap<QString, Solver*> *solverNames;
+    QMap<QString, SolverInterface*> *solverNames;
     //QVector<Solver*> solvers;
     //NodeInfo *headNodeInfo;
     //NodeInfo *tailNodeInfo;
