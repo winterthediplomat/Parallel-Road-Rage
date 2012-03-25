@@ -57,7 +57,15 @@ void ConstraintChooserDialog::createConstraintSlot()
         QString constraintName=this->ui->constraintsListWidget->item(
                 this->currentConstraintListWidgetRow
                 )->text();
-        this->gih->launchConstraintDialog(constraintName);
+        bool isAccept=this->ui->acceptRadioButton->isChecked();
+        bool isReject=this->ui->rejectRadioButton->isChecked();
+        if(!isAccept && !isReject)
+        {
+            QMessageBox::critical(this, "u mad bro?", "you have to choose the constraint is accept or reject",
+                                  QMessageBox::Ok);
+            return;
+        }
+        this->gih->launchConstraintDialog(constraintName, isAccept?true:false);
         //QListWidget this->ui->constraintsListWidget->item(this->currentRow);
     }
     //currentConstraintListWidgetRow==-1
@@ -91,9 +99,9 @@ void ConstraintChooserDialog::deleteConstraintSlot()
                         );
         }
 
-        this->ui->setupConstraintsListWidget->removeItemWidget(
-                    this->ui->setupConstraintsListWidget->item(
-                        this->currentSetUpConstraintListWidgetRow));
+        //this->ui->setupConstraintsListWidget->removeItemWidget(
+        //            this->ui->setupConstraintsListWidget->item(
+        //                this->currentSetUpConstraintListWidgetRow));
     }
     else
     {
@@ -106,7 +114,6 @@ void ConstraintChooserDialog::deleteConstraintSlot()
 
 void ConstraintChooserDialog::updateConstraintSlot()
 {
-
     loadSavedConstraints();
 }
 

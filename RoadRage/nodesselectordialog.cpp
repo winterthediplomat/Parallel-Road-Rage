@@ -1,6 +1,7 @@
 #include "nodesselectordialog.h"
 #include "ui_nodesselectordialog.h"
 #include "iostream"
+#include "solvers/dijkstra/dijkstrasolver.h"
 using namespace std;
 
 NodesSelectorDialog::NodesSelectorDialog(GraphInformationHandler *gih, QWidget *parent) :
@@ -16,8 +17,8 @@ NodesSelectorDialog::NodesSelectorDialog(GraphInformationHandler *gih, QWidget *
     cout<<"NodesSelectorDialog->ui->secondNodeComboBox has "<<ui->secondNodeListWidget->count()<<" items"<<endl;
     //this->ui->firstNodeListWidget->setCurrentIndex(0);
     //this->ui->secondNodeListWidget->setCurrentIndex(0);
-    this->firstIndex=0;
-    this->secondIndex=0;
+    this->firstIndex=-1;
+    this->secondIndex=-1;
 }
 
 NodesSelectorDialog::~NodesSelectorDialog()
@@ -61,79 +62,17 @@ void NodesSelectorDialog::setupComboBoxes()
 
 void NodesSelectorDialog::on_firstNodeListWidget_currentRowChanged(int currentRow)
 {
-    //with this trick we should get a faster response!
     this->firstIndex=currentRow;
-    Link* the_link=gih->getTheLinkByNodes(gih->getNodeByIndex(this->firstIndex),
-                           gih->getNodeByIndex(this->secondIndex));
-    if(the_link)
-    {
-        cout<<"a link between nodes exists!"<<endl;
-        this->ui->linkLabel->setText("a link between nodes exists!");
-        cout<<"the distance between nodes is "<<the_link->distance()<<endl;
-        this->ui->distanceLabel->setText("the distance between nodes is: "+the_link->distance());
-    }
-    else if(this->firstIndex==this->secondIndex)
-    {
-        cout<<"a link between nodes does not exist!"<<endl;
-        this->ui->linkLabel->setText("a link between nodes does not exist!");
-        cout<<"the distance between nodes is 0"<<endl;
-        this->ui->distanceLabel->setText("the distance between nodes is: 0");
-    }
-    else
-    {
-        QList<unsigned int> distance;
-        QList<int> previous;
-        QList<bool> visited;
-        this->gih->execDijkstra(this->firstIndex,
-                                this->secondIndex,
-                                distance,
-                                previous,
-                                visited
-                                );
-        cout<<"the distance between nodes is "<<distance[secondIndex]<<endl;
-        this->ui->distanceLabel->setText(QString("the distance between nodes is: %1").arg(
-                distance[this->secondIndex])
-                                         );
-        cout<<"a link between nodes does not exist!"<<endl;
-        this->ui->linkLabel->setText("a link between nodes does not exist!");
-    }
+    if(this->secondIndex!=-1)
+        this->modifyResponse(this->firstIndex, this->secondIndex);
 }
 
 
 void NodesSelectorDialog::on_secondNodeListWidget_currentRowChanged(int currentRow)
 {
-    //with this trick we should get a faster response!
     this->secondIndex=currentRow;
-    Link* the_link=gih->getTheLinkByNodes(gih->getNodeByIndex(this->firstIndex),
-                           gih->getNodeByIndex(this->secondIndex));
-    if(the_link)
-    {
-        this->ui->linkLabel->setText("a link between nodes exists!");
-        this->ui->distanceLabel->setText(QString("the distance between nodes is: %1").arg(
-                QString::number(the_link->distance())));
-    }
-    else if(this->firstIndex==this->secondIndex)
-    {
-        this->ui->linkLabel->setText("a link between nodes does not exist!");
-        this->ui->distanceLabel->setText("the distance between nodes is: 0");
-    }
-    else
-    {
-
-        QList<unsigned int> distance;
-        QList<int> previous;
-        QList<bool> visited;
-        this->gih->execDijkstra(this->firstIndex,
-                                this->secondIndex,
-                                distance,
-                                previous,
-                                visited
-                                );
-        this->ui->distanceLabel->setText(QString("the distance between nodes is: %1").arg(
-                QString::number(distance[this->secondIndex]))
-                                         );
-        this->ui->linkLabel->setText("a link between nodes does not exist!");
-    }
+    if(this->firstIndex!=-1)
+        this->modifyResponse(this->firstIndex, this->secondIndex);
 }
 
 bool NodesSelectorDialog::isSwitchNodesChecked()
@@ -143,6 +82,8 @@ void NodesSelectorDialog::setSwitchNodesChecked(bool state, bool isStateExchange
 {
     this->ui->switchCheckBox->setChecked(state);
     this->ui->switchCheckBox->setCheckable(isStateExchangeable);
+    //if you can't change state of checkbox, don't even show it!
+    this->ui->switchCheckBox->setVisible(isStateExchangeable);
 }
 
 void NodesSelectorDialog::setDistanceLabelVisible(bool isVisible)
@@ -153,4 +94,61 @@ void NodesSelectorDialog::setDistanceLabelVisible(bool isVisible)
 void NodesSelectorDialog::setLinkExistingLabelVisible(bool isVisible)
 {
     this->ui->linkLabel->setVisible(isVisible);
+}
+
+
+void NodesSelectorDialog::modifyResponse(int fromNodeRow, int toNodeRow)
+{
+    cout<<"-----------------------------------------------"<<endl;
+    cout<<"there is a link from "<<fromNodeRow<<" and "<<toNodeRow<<"?"<<endl;
+    Link* the_link=gih->getTheLinkByNodes(gih->getNodeByIndex(this->firstIndex),
+                           gih->getNodeByIndex(this->secondIndex));
+    if(the_link)
+    {
+        cout<<"a link between nodes exists!"<<endl;
+        this->ui->linkLabel->setText("a link between nodes exists!");
+        unsigned int distance=the_link->distance();
+        if(the_link->distance()==0 || the_link->distance()==INT_MAX)
+        {
+            //f**ki' stupid check related to DiagramWindow::addLink
+            distance=this->getDijkstraLength(fromNodeRow, toNodeRow);
+            this->ui->linkLabel->setText("a link between nodes does not exists, but Dijkstra calculated it!");
+        }
+
+        cout<<"the distance between nodes is "<<distance<<endl;
+        this->ui->distanceLabel->setText(QString("the distance between nodes is: %1").arg(QString::number(distance)));
+    }
+    else if(this->firstIndex==this->secondIndex)
+    {
+        cout<<"looking for a way to reach the same node!"<<endl;
+        this->ui->linkLabel->setText("looking for a way to go where already are you? stop!");
+        cout<<"the distance between nodes is 0"<<endl;
+        this->ui->distanceLabel->setText("the distance between nodes is: 0");
+    }
+    else
+    {
+        cout<<"calculating solution!!!"<<endl;
+        unsigned int distance=this->getDijkstraLength(fromNodeRow, toNodeRow);
+        cout<<"the distance between nodes is "<<distance<<endl;
+        this->ui->distanceLabel->setText(QString("the distance between nodes is: %1").arg(distance));
+        cout<<"a link between nodes does not exist!"<<endl;
+        this->ui->linkLabel->setText("a link does not exists, but Dijkstra calculated it");
+    }
+}
+
+unsigned int
+NodesSelectorDialog::getDijkstraLength(int fromNodeRow, int toNodeRow)
+{
+    DijkstraSolver dijkstra;
+    dijkstra.setGIH(this->gih);
+    Path fasterPath;
+    unsigned int distance;
+
+    dijkstra.getSolutions(this->gih->getNodeByIndex(fromNodeRow)->text(),
+                          this->gih->getNodeByIndex(toNodeRow)->text(),
+                          fasterPath, distance);
+    cout<<"printing path"<<endl;
+    fasterPath.print();
+    return distance;
+    //return this->gih->getLengthOfPath(fasterPath);
 }

@@ -29,9 +29,12 @@ Path::Path(unsigned int maxNodes, QVector<unsigned int> path)
 QVector<unsigned int> Path::getPath()
 {return path;}
 
-void Path::appendPoint(unsigned int point)
+void Path::appendPoint(unsigned int point, bool putAtFirst)
 {
-    this->path.push_back(point);
+    if(putAtFirst)
+        this->path.push_front(point);
+    else
+        this->path.push_back(point);
 }
 
 

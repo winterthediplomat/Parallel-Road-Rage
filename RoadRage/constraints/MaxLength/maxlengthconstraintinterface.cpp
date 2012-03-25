@@ -16,7 +16,7 @@ MaxLengthConstraint *MaxLengthConstraintInterface::getConstraintObj()
     return new MaxLengthConstraint();
 }
 
-QDialog* MaxLengthConstraintInterface::getDialog()
+ConstraintDialog* MaxLengthConstraintInterface::getDialog()
 {
     cout<<"yeah, you're MaxLengthConstraintInterface!!!!1"<<endl;
     return new MaxLengthConstraintDialog(this->gih, 0);

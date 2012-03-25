@@ -13,7 +13,7 @@ public:
     virtual bool hasUI();
 
     virtual LastPointConnectedToFirstConstraint* getConstraintObj();
-    virtual QDialog* getDialog();
+    virtual ConstraintDialog* getDialog();
 };
 
 #endif // LASTPOINTCONNECTEDTOFIRSTCONSTRAINTINTERFACE_H

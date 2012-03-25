@@ -99,7 +99,7 @@ QPair<qreal, qreal> Link::getMidPoint()
     //the link, using position of nodes
     //math rulez, bro! :D
     qreal minX=myFromNode->x()<myToNode->x()?myFromNode->x():myToNode->x();
-    qreal minY=myFromNode->y()<myToNode->x()?myFromNode->x():myToNode->x();
+    qreal minY=myFromNode->y()<myToNode->y()?myFromNode->y():myToNode->y();
     qreal midX=((myToNode->x()-myFromNode->x())/2)+minX;
     qreal midY=((myToNode->y()-myFromNode->y())/2)+minY;
     return QPair<qreal, qreal>(midX, midY);

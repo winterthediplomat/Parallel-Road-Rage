@@ -42,7 +42,8 @@ private slots:
     void switchNodesSlot();
     void getDistanceSlot();
 
-    void getTSPSlot();
+    void getBacktrackingTSPSlot();
+    //void getDijkstraSlot();
     void chooseConstraintSlot();
     //constraint slots
     //void setConstraintOnNodeSlot();
@@ -81,7 +82,7 @@ private:
     QToolBar *utilityToolBar;
 
     //added QMenus
-    QMenu *constraintMenu;
+    //QMenu *constraintMenu;
     QMenu *solverMenu;
     QAction *setConstraintOnNodeAction;
 
@@ -94,7 +95,8 @@ private:
     QAction *switchNodesAction;
     QAction *getDistanceAction;
 
-    QAction* getTSPAction;
+    QAction* getBacktrackingTSPAction;
+    //QAction* getDijkstraAction;
     QAction* chooseConstraintAction;
 
     QGraphicsScene *scene;
@@ -108,7 +110,7 @@ private:
     GraphInformationHandler *gih;
     QString currentFile;
     bool isGraphModified;
-    QList<LinksDescriptor*> linkDescriptions;
+    //QList<LinksDescriptor*> linkDescriptions;
 };
 
 #endif

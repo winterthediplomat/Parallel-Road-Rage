@@ -10,7 +10,7 @@ public:
     StartFromPointConstraintInterface(GraphInformationHandler* gih);
 
     virtual StartFromPointConstraint* getConstraintObj();
-    virtual QDialog* getDialog();
+    virtual ConstraintDialog* getDialog();
 };
 
 #endif // STARTFROMPOINTCONSTRAINTINTERFACE_H

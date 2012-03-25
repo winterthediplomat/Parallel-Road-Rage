@@ -2,7 +2,7 @@
 #define CONSTRAINTINTERFACE_H
 
 #include "constraint.h"
-#include <QDialog>
+#include "constraintdialog.h"
 //#include <QAction>
 
 class GraphInformationHandler; //forward declaration
@@ -20,7 +20,7 @@ public:
 
     //virtual bool isReject()=0;
     virtual Constraint* getConstraintObj();
-    virtual QDialog* getDialog();
+    virtual ConstraintDialog* getDialog();
     //virtual QString name();
 
     /*

@@ -6,8 +6,7 @@ StartFromPointConstraintInterface::StartFromPointConstraintInterface(
     this->gih=gih;
 }
 
-QDialog*
-StartFromPointConstraintInterface::getDialog()
+ConstraintDialog *StartFromPointConstraintInterface::getDialog()
 {
     return NULL;
 }

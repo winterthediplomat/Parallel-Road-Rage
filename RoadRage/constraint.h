@@ -5,7 +5,7 @@
 #include <QString>
 
 class GraphInformationHandler;
-//#include "graphinformationhandler.h"
+//include "graphinformationhandler.h"
 
 class Constraint
 {

@@ -106,7 +106,7 @@ void DiagramWindow::addLink()
                         );
             }
         }
-        cout<<"creating LinksDescriptor"<<endl;
+        /*cout<<"creating LinksDescriptor"<<endl;
         LinksDescriptor *ld=new LinksDescriptor(
                 lid->links().first(), lid->links().last(),
                 scene->addText(
@@ -116,6 +116,7 @@ void DiagramWindow::addLink()
         ld->getDescription()->setPos(lid->links().first()->getMidPoint().first, //x
                                      lid->links().first()->getMidPoint().second); //y
         gih->addLinksDescriptor(ld);
+        */
         this->modified();
     }
 }
@@ -361,9 +362,13 @@ void DiagramWindow::createActions()
             this, SLOT(getDistanceSlot()));
 
 
-    this->getTSPAction=new QAction(tr("get possible paths number using backtracking"), this);
-    connect(getTSPAction, SIGNAL(triggered()),
-            this, SLOT(getTSPSlot()));
+    this->getBacktrackingTSPAction=new QAction(tr("launch backtracking for TSP"), this);
+    connect(getBacktrackingTSPAction, SIGNAL(triggered()),
+            this, SLOT(getBacktrackingTSPSlot()));
+
+    //this->getDijkstraAction=new QAction(tr("calculate Dijkstra between two points"), this);
+    //connect(getDijkstraAction, SIGNAL(triggered()),
+    //        this, SLOT(getDijkstraSlot()));
 
     this->chooseConstraintAction=new QAction(tr("choose a constraint"), this);
     connect(this->chooseConstraintAction, SIGNAL(triggered()),
@@ -395,6 +400,9 @@ void DiagramWindow::createMenus()
     editMenu->addAction(generateReportAction);
     editMenu->addAction(updateLinkAction);
     editMenu->addAction(selectNodesAction);
+
+    solverMenu=menuBar()->addMenu(tr("&Solvers"));
+    solverMenu->addAction(this->getBacktrackingTSPAction);
 }
 
 void DiagramWindow::createToolBars()
@@ -410,13 +418,12 @@ void DiagramWindow::createToolBars()
     editToolBar->addSeparator();
     editToolBar->addAction(bringToFrontAction);
     editToolBar->addAction(sendToBackAction);
+
     utilityToolBar=addToolBar(tr("Utility"));
     utilityToolBar->addAction(this->selectNodesAction);
     utilityToolBar->addAction(this->switchNodesAction);
     utilityToolBar->addAction(this->generateReportAction);
     utilityToolBar->addAction(this->getDistanceAction);
-
-    utilityToolBar->addAction(this->getTSPAction);
     utilityToolBar->addAction(this->chooseConstraintAction);
 }
 
@@ -550,7 +557,7 @@ void DiagramWindow::openGraph()
             the_link->fromNode()->addLink(the_link);
             the_link->toNode()->addLink(the_link);
             the_link->setDistance(row_args.at(3).toUInt());
-            foreach(Link *first, gih->getLinks())
+            /*foreach(Link *first, gih->getLinks())
             {
                 foreach(Link *second, gih->getLinks())
                 {
@@ -571,8 +578,8 @@ void DiagramWindow::openGraph()
                         gih->addLinksDescriptor(ld);
                         }
                     }
-                }
-            }
+               }
+            }*/
 
         }
         else {/* some sh*t I don't want to handle */}
@@ -665,6 +672,7 @@ void DiagramWindow::selectNodes()
                                         );
                             }
                         }
+                        /*
                         LinksDescriptor *ld=new LinksDescriptor(
                                 lid->links().first(), lid->links().last(),
                                 scene->addText(
@@ -676,6 +684,7 @@ void DiagramWindow::selectNodes()
                         ld->getDescription()->setPos(lid->links().first()->getMidPoint().first, //x
                                                      lid->links().first()->getMidPoint().second); //y
                         gih->addLinksDescriptor(ld);
+                        */
                         this->modified();
                     }
             }
@@ -722,9 +731,8 @@ void DiagramWindow::switchNodesSlot()
     }
 }
 
-void DiagramWindow::getTSPSlot()
+void DiagramWindow::getBacktrackingTSPSlot()
 {
-
     BTSolver bts;
     ////old way!
     ////AllDifferentElementsConstraint *adec=new AllDifferentElementsConstraint();
@@ -774,11 +782,13 @@ void DiagramWindow::getTSPSlot()
                 shortest=act;
                 bestPathLength=newLength;
             }
+            cout<<"length of this path: "<<newLength<<endl;
         }
     }
     else
         cout<<"no solutions LOL"<<endl;
-    QMessageBox::information(this, "ok, solved!", QString::number(solutions.size())+" solutions"/*", best length is:"+QString::number(bestPathLength)*/);
+    QMessageBox::information(this, "ok, solved!", QString::number(solutions.size())+
+                             " solutions, best length is:"+QString::number(bestPathLength));
 }
 
 void DiagramWindow::getDistanceSlot()

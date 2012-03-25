@@ -11,7 +11,7 @@ public:
 
     virtual bool hasUI();
     virtual AllConnectedToEachOther* getConstraintObj();
-    virtual QDialog* getDialog();
+    virtual ConstraintDialog* getDialog();
 };
 
 #endif // ALLCONNECTEDTOEACHOTHERCONSTRAINTINTERFACE_H

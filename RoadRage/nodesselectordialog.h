@@ -29,6 +29,8 @@ protected:
 
 private:
     void setupComboBoxes();
+    void modifyResponse(int fromNodeRow, int toNodeRow);
+    unsigned int getDijkstraLength(int fromNodeRow, int toNodeRow);
 
     Ui::NodesSelectorDialog *ui;
     GraphInformationHandler *gih;

@@ -14,7 +14,7 @@ bool AllConnectedToEachOtherConstraintInterface::hasUI()
     return false;
 }
 
-QDialog* AllConnectedToEachOtherConstraintInterface::getDialog()
+ConstraintDialog *AllConnectedToEachOtherConstraintInterface::getDialog()
 {
     return NULL;
 }

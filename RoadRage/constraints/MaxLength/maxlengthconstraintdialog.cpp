@@ -4,7 +4,7 @@
 
 MaxLengthConstraintDialog::MaxLengthConstraintDialog(GraphInformationHandler *gih,
                                          QWidget *parent) :
-    QDialog(parent),
+    ConstraintDialog(parent),
     ui(new Ui::MaxLengthConstraintDialog)
 {
     ui->setupUi(this);
@@ -21,8 +21,15 @@ MaxLengthConstraintDialog::~MaxLengthConstraintDialog()
 
 void MaxLengthConstraintDialog::buttonBoxAcceptedSlot()
 {
-    MaxLengthConstraint* mlc=new MaxLengthConstraint();
-    mlc->setMaxLength(this->ui->spinBox->value());
-    cout<<"added MaxLengthConstraint obj into accept constraints"<<endl;
-    this->gih->addAcceptConstraint(mlc);
+    this->constraintObj=new MaxLengthConstraint();
+    this->constraintObj->setMaxLength(this->ui->spinBox->value());
+    //cout<<"added MaxLengthConstraint obj into accept constraints"<<endl;
+    //this->gih->addAcceptConstraint(mlc);
+}
+
+//MaxLengthConstraint*
+Constraint*
+MaxLengthConstraintDialog::getConstraintObj()
+{
+    return this->constraintObj;
 }

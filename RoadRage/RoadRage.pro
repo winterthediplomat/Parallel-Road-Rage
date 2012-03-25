@@ -36,8 +36,8 @@ SOURCES += main.cpp \
     constraints/LastPointConnectedToFirst/lastpointconnectedtofirstconstraint.cpp \
     constraints/StartFromPoint/startfrompointconstraint.cpp \
     constraints/StartFromPoint/startfrompointconstraintinterface.cpp \
-    solverinterface.cpp \
-    solvers/backtracking/btsolverinterface.cpp
+    solvers/dijkstra/dijkstrasolver.cpp \
+    constraintdialog.cpp
 HEADERS += updatelinkdialog.h \
     ui_linkinfodialog.h \
     propertiesdialog.h \
@@ -67,8 +67,8 @@ HEADERS += updatelinkdialog.h \
     constraints/LastPointConnectedToFirst/lastpointconnectedtofirstconstraint.h \
     constraints/StartFromPoint/startfrompointconstraint.h \
     constraints/StartFromPoint/startfrompointconstraintinterface.h \
-    solverinterface.h \
-    solvers/backtracking/btsolverinterface.h
+    solvers/dijkstra/dijkstrasolver.h \
+    constraintdialog.h
 OTHER_FILES += TODO.txt \
     testSalvataggio.txt
 FORMS += updatelinkdialog.ui \

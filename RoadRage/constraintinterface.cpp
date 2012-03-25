@@ -7,7 +7,7 @@ ConstraintInterface::ConstraintInterface(GraphInformationHandler *gih)
     this->gih=gih;
 }
 
-QDialog* ConstraintInterface::getDialog()
+ConstraintDialog *ConstraintInterface::getDialog()
 {
     return 0;
 }

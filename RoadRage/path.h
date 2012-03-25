@@ -22,7 +22,7 @@ public:
     Path(unsigned int maxNodes, QVector<unsigned int> path);
 
     QVector<unsigned int> getPath();
-    void appendPoint(unsigned int point);
+    void appendPoint(unsigned int point, bool putAtFirst=false);
 
     //void nextCandidates(QVector<Path> *nextCandidates);
 

@@ -6,8 +6,9 @@
 #include "QMessageBox"
 using namespace std;
 
+#include "constraintDialog.h"
+
 //################ CONSTRAINTS #####################
-//#include "constraints/maxlengthconstraint.h"
 #include "constraints/AllDifferentElements/alldifferentelementsconstraintinterface.h"
 #include "constraints/MaxLength/maxlengthconstraintinterface.h"
 #include "constraints/AllConnectedToEachOther/allconnectedtoeachotherconstraintinterface.h"
@@ -16,7 +17,8 @@ using namespace std;
 //##################################################
 
 //################ SOLVERS #########################
-#include "solvers/backtracking/btsolverinterface.h"
+//#include "solvers/backtracking/btsolverinterface.h"
+#include "solvers/dijkstra/dijkstrasolver.h"
 //##################################################
 
 GraphInformationHandler::GraphInformationHandler()
@@ -26,7 +28,7 @@ GraphInformationHandler::GraphInformationHandler()
     //this->links=QList<Link*>();
     //this->nodes=QList<Node*>();
     cout<<"this->nodes address: "<<&this->nodes<<endl;
-    this->linksDescriptors=QVector<LinksDescriptor*>();
+    //this->linksDescriptors=QVector<LinksDescriptor*>();
 
     this->acceptedConstraints=QVector<Constraint*>();
     this->rejectedConstraints=QVector<Constraint*>();
@@ -47,9 +49,9 @@ GraphInformationHandler::GraphInformationHandler()
     //##################################################
 
     //########## solverNames initialization ############
-    this->solverNames=new QMap<QString, SolverInterface*>;
-    this->solverNames->insert("BacktrackingTSPSolver",
-                              new BTSolverInterface(this));
+    //this->solverNames=new QMap<QString, SolverInterface*>;
+    //this->solverNames->insert("BacktrackingTSPSolver",
+    //                          new BTSolverInterface(this));
     //##################################################
 }
 
@@ -109,74 +111,6 @@ void GraphInformationHandler::updateLink(Node *fromNode, Node *toNode, unsigned 
     this->updateLinkTrack();
 }
 
-void GraphInformationHandler::execDijkstra(unsigned int startNodeNum, unsigned int endNodeNum,
-                                           QList<unsigned int> &distance, QList<int> &previous,
-                                           QList<bool> &visited)
-{
-    //this function executes the Dijkstra algorithm on graphs
-    //this function has five parameters
-    //startNodeNum (IN): int, the number of the start node
-    //endNodeNum (IN): int, the number of the end node
-    //distance (OUT): QList<int>, it will contain distances of all nodes in the graph
-    //previous (OUT): QList<int>, it will contain previous nodes of all nodes in the graph
-    //visited (OUT): QList<bool>, it will contain "visited" flag of related node
-    const unsigned int NODE_NO=this->nodes.count();
-    unsigned int matrix[NODE_NO][NODE_NO];
-    unsigned int INFINITO=2147483647;
-    //carico la matrice
-    for(unsigned int i=0; i<NODE_NO; i++)
-    {
-        for(unsigned int j=0; j<NODE_NO; j++)
-        {
-            Link* link=this->getTheLinkByNodes(this->getNodeByIndex(i), this->getNodeByIndex(j));
-            if(link)
-            {
-                matrix[i][j]=link->distance();
-            }
-            else
-            {
-                matrix[i][j]=INFINITO;
-            }
-        }
-        visited.append(false);
-        previous.append(-1);
-        distance.append(INFINITO);
-    }
-    cout<<"startNodeNum=="<<startNodeNum<<"\tendNodeNum=="<<endNodeNum<<endl;
-    cout<<"caricata la matrice!"<<endl;
-    distance[startNodeNum]=0;
-    unsigned int min_length, actualNodeNum;
-    bool arrivedAtEnd=false;
-    while(!arrivedAtEnd)
-    {
-        min_length=INFINITO;
-        for(unsigned int candidateNodeNum=0; candidateNodeNum<NODE_NO; candidateNodeNum++)
-        {
-            if(!visited[candidateNodeNum] && distance[candidateNodeNum]<=min_length)
-            {
-                actualNodeNum=candidateNodeNum;
-                min_length=distance[actualNodeNum];
-            }
-        }
-        visited[actualNodeNum]=true;
-        if ((min_length==INFINITO) || (actualNodeNum==endNodeNum))
-        {
-            arrivedAtEnd=true;
-        }
-        else
-        {
-            for(unsigned int i=0; i<NODE_NO; i++)
-            {
-                if(matrix[actualNodeNum][i] && distance[i]>distance[actualNodeNum]+matrix[actualNodeNum][i])
-                {
-                    distance[i]=distance[actualNodeNum]+matrix[actualNodeNum][i];
-                    previous[i]=actualNodeNum;
-                }
-            }
-        }
-    }
-}
-
 Node* GraphInformationHandler::getNodeByIndex(int index)
 {
     //return the node at the given index
@@ -204,20 +138,17 @@ void GraphInformationHandler::generateReport()
     fclose(csvFile);
     */
     //this function generates an HTML file
-    unsigned int INFINITO=2147483647;
+    //unsigned int INFINITO=2147483647;
     QFile file("outD.html");
     file.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream report(&file);
     
 
-    QList<int> prev;
-    QList<unsigned int> distance;
-    QList<bool> visited;
     Node *startNode, *endNode;
+    //HTML generation should be done by external program, I think.
+    //(Python work, using string.Template from standard library)
     report<<"<html>"<<endl;
     report<<"<head>"<<endl;
-    report<<"   <!-- corpo di una pagina html, questo è il report! -->"<<endl;
-    report<<"   <!-- \"notch servo, aggiusta i bug!\" (cit. Chiunque su Minecraft) -->"<<endl;
     report<<"   <script>"<<endl;
     report<<"   infoMap={};"<<endl;
     report<<"   function modifica(idSezione)"<<endl;
@@ -246,15 +177,21 @@ void GraphInformationHandler::generateReport()
                 startNode->text())<<endl;
         for(int endNodeNum=0; endNodeNum<this->getNodes().count(); endNodeNum++)
         {
-            prev=QList<int>();
-            distance=QList<unsigned int>();
-            visited=QList<bool>();
+            endNode=this->getNodeByIndex(endNodeNum);
 
             if(startNodeNum!=endNodeNum)
             {
-                this->execDijkstra(startNodeNum, endNodeNum, distance, prev, visited);
-                endNode=this->getNodeByIndex(endNodeNum);
-                if(distance[endNodeNum]==INFINITO)
+                Path thePath;
+                unsigned int distanceOfPath;
+                DijkstraSolver dijkstra;
+                dijkstra.setGIH(this);
+                dijkstra.getSolutions(
+                            startNode->text(),
+                            endNode->text(),
+                            thePath, distanceOfPath
+                            );
+
+                if(distanceOfPath==INT_MAX)
                 {
                     report<<QString("       <font color='red'><p>does not exist a way to go from node %1 to node %2</p></font>").arg(
                             startNode->text(), endNode->text())<<endl;
@@ -262,24 +199,19 @@ void GraphInformationHandler::generateReport()
                 else
                 {
                     report<<QString("       <font color='green'><p>the distance from node %1 to node %2 is %3</p></font>").arg(
-                            startNode->text(), endNode->text(), QString::number(distance[endNodeNum]))<<endl;
-                    QString path("");
-                    unsigned int actualNodeNum=endNodeNum;
-                    if(prev[endNodeNum]==startNodeNum)
+                            startNode->text(), endNode->text(), QString::number(distanceOfPath))<<endl;
+                    QString path("<font color='yellow'>");
+                    foreach(unsigned int point, thePath.getPath())
                     {
-                        path=QString("<font color='yellow'>")+endNode->text()+QString("</font>");
-                    }
-                    while(prev[actualNodeNum]!=startNodeNum)
-                    {
-                        if (actualNodeNum!=endNodeNum)
+                        path+=QString("%1").arg(point);
+                        if(point!=thePath.getPath().last())
                             path+=QString("->");
-                        path+=QString("<font color='yellow'>")+this->getNodeByIndex(actualNodeNum)->text()+QString(+"</font>");
-                        actualNodeNum=prev[actualNodeNum];
                     }
-                    path+=QString("-><font color='yellow'>")+startNode->text()+QString("</font>");
-                    report<<QString("<p>the path is: %1</p>").arg(path)<<endl;
+                    path+=QString("</font>");
+
 
                 }
+
             }
         }
         report<<"<br />"<<endl<<"</div>"<<endl;
@@ -394,6 +326,7 @@ void GraphInformationHandler::updateLinkTrack()
         actual_link->trackNodes();
     }
 
+    /*
     foreach(LinksDescriptor* ld, this->linksDescriptors)
     {
         cout<<"updating linksdescriptors"<<endl;
@@ -406,8 +339,10 @@ void GraphInformationHandler::updateLinkTrack()
         cout<<ld->getDescription()->y()<<endl;
         cout<<"lolasd!"<<endl;
     }
+    */
 }
 
+/*
 void GraphInformationHandler::addLinksDescriptor(LinksDescriptor *newLinksDescriptor)
 {
     this->linksDescriptors.append(newLinksDescriptor);
@@ -423,7 +358,7 @@ LinksDescriptor* GraphInformationHandler::getLinksDescriptorByLinks(Link *first,
     }
     return NULL;
 }
-
+*/
 void GraphInformationHandler::addAcceptConstraint(Constraint *newConstraint)
 {
     this->acceptedConstraints.append(newConstraint);
@@ -498,7 +433,8 @@ QVector<Constraint*> GraphInformationHandler::getRejectedConstraints()
     return this->rejectedConstraints;
 }
 
-void GraphInformationHandler::launchConstraintDialog(QString constraintName)
+void GraphInformationHandler::launchConstraintDialog(QString constraintName,
+                                                     bool isAccept)
 {
     /*
       I need this GIH method to launch the right constraint dialog
@@ -507,33 +443,33 @@ void GraphInformationHandler::launchConstraintDialog(QString constraintName)
       Constraint subclass object
     */
     if(this->constraintNames->value(constraintName)->getDialog()!=NULL)
-        this->constraintNames->value(constraintName)->getDialog()->exec();
+    {
+        ConstraintDialog *constrDialog=this->constraintNames->value(constraintName)->getDialog();
+        int dialResult=constrDialog->exec();
+        if(dialResult)
+        {
+            if(isAccept)
+                this->addAcceptConstraint(constrDialog->getConstraintObj());
+            else
+                this->addRejectConstraint(constrDialog->getConstraintObj());
+        }
+    }
     else
     {
-        /*
-          we need to ask user if new constraint is a Accept constraint
-          or a Reject one.
-          EDIT: this check will be obsolete if I do it in ConstraintChooserDialog itself.
-        */
-        ConstraintPositionChooserDialog cpcd;
         Constraint* constraintObj=this->createConstraint(constraintName);
-        //if(constraintObj->needsGIH())
-        //    constraintObj->setGIH(this);
+        constraintObj->setGIH(this);
         cout<<"just for control, gih obj address is: "<<this<<endl;
-        if(cpcd.exec()==QDialog::Accepted)
-        {
-            if(cpcd.isAccept)
-                this->addAcceptConstraint(constraintObj);
-            else
-                this->addRejectConstraint(constraintObj);
-            QMessageBox::information(0, "added a constraint",
-                                     QString("added new constraint %1 as %2").arg(constraintName)
-                                           .arg(cpcd.isAccept?QString("accepted"):QString("rejected")));
-        }
+        if(isAccept)
+            this->addAcceptConstraint(constraintObj);
+        else
+            this->addRejectConstraint(constraintObj);
+        QMessageBox::information(0, "added a constraint",
+                                 QString("added new constraint %1 as %2").arg(constraintName)
+                                       .arg(isAccept?QString("accepted"):QString("rejected")));
     }
 }
 
-
+/*
 void
 GraphInformationHandler::launchSolverDialog(QString solverName)
 {
@@ -543,23 +479,58 @@ GraphInformationHandler::launchSolverDialog(QString solverName)
     else
     {
         Solver* solverObj=this->solverNames->value(solverName)->getSolverObj();
+        foreach(Constraint* rejConstr, this->getRejectedConstraints())
+            solverObj->addRejectConstraint(rejConstr);
+        foreach(Constraint* accConstr, this->getAcceptedConstraints())
+            solverObj->addAcceptConstraint(accConstr);
+        //this->solverNames->value(solverName)->init();
+        //QVector<Path> solutions;
+        if(this->solverNames->value(solverName)->isConstructiveHeuristic())
+        {
+            Path starting=Path(this->gih->getNodes().length());
+            foreach(Node* node, this->gih->getNodes())
+            {
+                starting.addName(node->text());
+            }
+            cout<<"GIH::launchSolverDialog: (constructive) asking solutions!"<<endl;
+            solverObj->getSolutions(starting, &solutions);
+        }
+        else
+        {
+            solverObj->getSolution(Path(0), &solution);
+        //}
+        /*
+          le euristiche possono essere di due tipi diversi:
+          costruttive e ricerca locale
+          (in ricerca locale sono inclusi per semplicità anche gli algoritmi di routing)
+          Di questa complessità non ci interessiamo dato che SolverInterface
+          sarà deputata anche all'inizializzazione del risolutore.
+          (non sarebbe male modificare tutto per poter evitare di gestire
+          UI nella logica...)
+        //
+        this->solverNames->value(solverName)->setUpSolver(solverObj);
 
+        //TODO: there a dialog containing solutions will be shown here. Now a dummy QMessageBox does the work.
+        QMessageBox::information(0, "fine", "fine calcolo risolutore", QMessageBox::Ok);
     }
 }
-
+*/
 
 unsigned int
 GraphInformationHandler::getLengthOfPath(Path examinedPath)
 {
-    /*
-      TODO: check examinedPath has some points that are not
-      connected and replace length with Dijkstra calculated distance
-    */
     unsigned int lengthOfPath=0;
-    Node *start, *end;
-    Link *link;
+    //Node *start, *end;  //uncomment if you don't have DijkstraSolver
+    //Link *link; //uncomment if you don't have DijkstraSolver
+    DijkstraSolver dij;
+    dij.setGIH(this);
+    Path lol;
+    unsigned int distance;
     for(int i=0; i<examinedPath.getPath().size()-1; i++)
     {
+        /*
+        //if there is no DijkstraSolver we have to get another way
+        //to calculate dijkstra
         start=this->getNodeByText(examinedPath.namesRelatedToPath().at(i));
         end=this->getNodeByText(examinedPath.namesRelatedToPath().at(i+1));
         link=this->getTheLinkByNodes(start, end);
@@ -569,7 +540,13 @@ GraphInformationHandler::getLengthOfPath(Path examinedPath)
         //cout<<start->text().toStdString()<<" "<<end->text().toStdString()<<" "<<link->distance()<<endl;
         //cout<<"lengthOfPath: "<<lengthOfPath<<endl;
         lengthOfPath+=link->distance();
+        */
+
+        dij.getSolutions(examinedPath.namesRelatedToPath().at(i),
+                         examinedPath.namesRelatedToPath().at(i+1),
+                         lol, distance);
+        lengthOfPath+=distance;
     }
-    cout<<"total length: "<<lengthOfPath<<endl;
+    //cout<<"total length: "<<lengthOfPath<<endl;
     return lengthOfPath;
 }

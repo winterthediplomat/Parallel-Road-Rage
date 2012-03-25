@@ -9,7 +9,7 @@
 #include "linksdescriptor.h"
 
 #include "constraintinterface.h"
-#include "solverinterface.h"
+//#include "solverinterface.h"
 
 /*
 struct NodeInfo
@@ -37,19 +37,13 @@ public:
     void removeNode(Node *oldNode);
     QList<Node*> getNodes();
     Node* getNodeByText(QString searchedText);
-    void execDijkstra(unsigned int startNodeNum,
-                      unsigned int endNodeNum,
-                 QList<unsigned int> &distance,
-                 QList<int> &previous,
-                 QList<bool> &visited
-                 );
     Node* getNodeByIndex(int index);
     Link* getTheLinkByNodes(Node* fromNode, Node* toNode);
     void updateLinkTrack();
-
+/*
     void addLinksDescriptor(LinksDescriptor* newLinksDescriptor);
     LinksDescriptor* getLinksDescriptorByLinks(Link* first, Link* second);
-
+*/
     //constraint management
     void addAcceptConstraint(Constraint* newConstraint);
     void addRejectConstraint(Constraint* newConstraint);
@@ -69,8 +63,8 @@ public:
     QVector<Constraint*> getAcceptedConstraints();
     QVector<Constraint*> getRejectedConstraints();
 
-    void launchConstraintDialog(QString constraintName);
-    void launchSolverDialog(QString solverName);
+    void launchConstraintDialog(QString constraintName, bool isAccept);
+    //void launchSolverDialog(QString solverName);
 
     unsigned int getLengthOfPath(Path examinedPath);
 
@@ -84,7 +78,7 @@ private:
     QVector<Constraint*> rejectedConstraints;
 
     QMap<QString, ConstraintInterface*> *constraintNames;
-    QMap<QString, SolverInterface*> *solverNames;
+    //QMap<QString, SolverInterface*> *solverNames;
     //QVector<Solver*> solvers;
     //NodeInfo *headNodeInfo;
     //NodeInfo *tailNodeInfo;

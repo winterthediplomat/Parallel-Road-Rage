@@ -6,7 +6,7 @@ LastPointConnectedToFirstConstraintInterface::LastPointConnectedToFirstConstrain
     this->gih=gih;
 }
 
-QDialog* LastPointConnectedToFirstConstraintInterface::getDialog()
+ConstraintDialog* LastPointConnectedToFirstConstraintInterface::getDialog()
 {
     return NULL;
 }

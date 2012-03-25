@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'constraintchooserdialog.ui'
 **
-** Created: Sun 29. Jan 16:51:36 2012
+** Created: Wed 21. Mar 12:18:32 2012
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -33,8 +33,8 @@ public:
     QWidget *verticalLayoutWidget;
     QVBoxLayout *verticalLayout;
     QPushButton *createPushButton;
-    QRadioButton *radioButton;
-    QRadioButton *radioButton_2;
+    QRadioButton *acceptRadioButton;
+    QRadioButton *rejectRadioButton;
     QPushButton *updatePushButton;
     QPushButton *deletePushButton;
     QListWidget *constraintsListWidget;
@@ -63,15 +63,15 @@ public:
 
         verticalLayout->addWidget(createPushButton);
 
-        radioButton = new QRadioButton(verticalLayoutWidget);
-        radioButton->setObjectName(QString::fromUtf8("radioButton"));
+        acceptRadioButton = new QRadioButton(verticalLayoutWidget);
+        acceptRadioButton->setObjectName(QString::fromUtf8("acceptRadioButton"));
 
-        verticalLayout->addWidget(radioButton);
+        verticalLayout->addWidget(acceptRadioButton);
 
-        radioButton_2 = new QRadioButton(verticalLayoutWidget);
-        radioButton_2->setObjectName(QString::fromUtf8("radioButton_2"));
+        rejectRadioButton = new QRadioButton(verticalLayoutWidget);
+        rejectRadioButton->setObjectName(QString::fromUtf8("rejectRadioButton"));
 
-        verticalLayout->addWidget(radioButton_2);
+        verticalLayout->addWidget(rejectRadioButton);
 
         updatePushButton = new QPushButton(verticalLayoutWidget);
         updatePushButton->setObjectName(QString::fromUtf8("updatePushButton"));
@@ -99,8 +99,8 @@ public:
         ConstraintChooserDialog->setWindowTitle(QApplication::translate("ConstraintChooserDialog", "Constraint Chooser Dialog", 0, QApplication::UnicodeUTF8));
         createPushButton->setText(QApplication::translate("ConstraintChooserDialog", "Create\n"
 "constraint", 0, QApplication::UnicodeUTF8));
-        radioButton->setText(QApplication::translate("ConstraintChooserDialog", "Accept constraint", 0, QApplication::UnicodeUTF8));
-        radioButton_2->setText(QApplication::translate("ConstraintChooserDialog", "Reject constraint", 0, QApplication::UnicodeUTF8));
+        acceptRadioButton->setText(QApplication::translate("ConstraintChooserDialog", "Accept constraint", 0, QApplication::UnicodeUTF8));
+        rejectRadioButton->setText(QApplication::translate("ConstraintChooserDialog", "Reject constraint", 0, QApplication::UnicodeUTF8));
         updatePushButton->setText(QApplication::translate("ConstraintChooserDialog", "Update\n"
 "constraint", 0, QApplication::UnicodeUTF8));
         deletePushButton->setText(QApplication::translate("ConstraintChooserDialog", "Delete\n"
