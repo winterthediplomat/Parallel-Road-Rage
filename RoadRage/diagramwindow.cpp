@@ -11,6 +11,8 @@
 #include "linksdescriptor.h"
 //#include "iostream"
 
+#include <QtScript>
+
 
 #include "constraintchooserdialog.h"
 
@@ -480,6 +482,7 @@ DiagramWindow::NodePair DiagramWindow::selectedNodePair() const
 
 void DiagramWindow::saveGraph()
 {
+
     if(this->currentFile.isEmpty())
        this->currentFile=QFileDialog::getSaveFileName(
                 this, "Save the graph", ".", "Text files (.txt)");
@@ -490,7 +493,7 @@ void DiagramWindow::saveGraph()
     QFile file(this->currentFile);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream out(&file);
-
+/*
     foreach(Node* actualNode, gih->getNodes())
     {
         out<<"Node;"<<actualNode->text()<<";"<<actualNode->x()<<";"<<actualNode->y()<<"\n";
@@ -499,6 +502,33 @@ void DiagramWindow::saveGraph()
     {
         out<<"Link;"<<actualLink->fromNode()->text()<<";"<<actualLink->toNode()->text()<<";"<<actualLink->distance()<<"\n";
     }
+*/
+    out<<"{nodes:[";
+    foreach(Node* actualNode, gih->getNodes())
+    {
+        out<<"{text:\""<<actuaNode->text()<<"\", xpos:"<<actualNode->x()<<", ypos:"<<actualNode->y()<<"},";
+    }
+    out<<"], ";
+
+    out<<"links:[";
+    foreach(Link* actualLink, gih->getLinks())
+    {
+        out<<"{fromnode:\""<<actualLink->fromNode->text()<<"\", tonode:\""<<actualLink->toNode->text()<<"\", distance:"<<actualLink->distance()<<"}, ";
+    }
+    out<<"], ";
+
+    out<<"constraints:";
+    out<<"{accept:[";
+    foreach(Constraint* acceptConstraint, gih->getAcceptedConstraints())
+    {
+        out<<acceptConstraint->generateJSON()<<", ";
+    }
+    out<<"], reject:["<<endl;
+    foreach(Constraint* rejectConstraint, gih->getRejectedConstraints())
+    {
+        out<<rejectConstraint->generateJSON()<<", ";
+    }
+    out<<"]}"<<endl;
 
     file.close();
     this->modified();

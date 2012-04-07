@@ -99,8 +99,14 @@ QPair<qreal, qreal> Link::getMidPoint()
     //the link, using position of nodes
     //math rulez, bro! :D
     qreal minX=myFromNode->x()<myToNode->x()?myFromNode->x():myToNode->x();
-    qreal minY=myFromNode->y()<myToNode->x()?myFromNode->x():myToNode->x();
-    qreal midX=((myToNode->x()-myFromNode->x())/2)+minX;
-    qreal midY=((myToNode->y()-myFromNode->y())/2)+minY;
+    qreal maxX=myFromNode->x()<myToNode->x()?myToNode->x():myFromNode()->x();
+
+    qreal minY=myFromNode->y()<myToNode->y()?myFromNode->y():myToNode->y();
+    qreal maxY=myFromNode->y()<myToNode->y()?myToNode->y():myFromNode()->y();
+
+    //qreal midX=((myToNode()->x()-myFromNode()->x())/2)+minX;
+    //qreal midY=((myToNode()->x()-myFromNode()->y())/2)+minY;
+    qreal midX=(maxX+minX)<<1; //n/2 (integer division) == n<<1
+    qreal midY=(maxY+minY)<<1;
     return QPair<qreal, qreal>(midX, midY);
 }
