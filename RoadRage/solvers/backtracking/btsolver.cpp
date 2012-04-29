@@ -65,15 +65,16 @@ void BTSolver::getSolutions(Path startSolution, QVector<Path> *solutions)
            cout<< omp_get_thread_num() <<"retrieving a solution..."<<endl;
            if(!candidateSolutionsStack->isEmpty())
            {
-               cout<<omp_get_thread_num()<<"retrieved!"<<endl;
+               //cout<<omp_get_thread_num()<<"retrieved!"<<endl;
                actualCandidate=candidateSolutionsStack->top();
                candidateSolutionsStack->pop();
+               //actualCandidate.print();
            }
            else
            {
                //cout<<"not retrieved, creating a path with 0 max length"<<endl;
                actualCandidate=Path(0);
-               cout<<"not retrieved"<<endl;
+               //cout<<"not retrieved"<<endl;
                //isRetrieved=false;
                //actualCandidate=NULL;
            }
@@ -130,7 +131,7 @@ void BTSolver::getSolutions(Path startSolution, QVector<Path> *solutions)
     //new solutions while others wait there, and
     //candidateSolutionsStack is not empty.
     #pragma omp barrier
-    cout<<"ok, over the barrier!"<<endl;
+    cout<<"ok, over the barrier! "<<omp_get_thread_num()<<endl;
 
     }while(!candidateSolutionsStack->isEmpty());
 } //end #pragma omp parallel

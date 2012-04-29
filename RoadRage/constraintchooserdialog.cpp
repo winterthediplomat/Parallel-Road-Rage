@@ -77,11 +77,9 @@ void ConstraintChooserDialog::deleteConstraintSlot()
 {
     if(this->currentSetUpConstraintListWidgetRow!=-1)
     {
-
-
         cout<<"# of accept constraints: "<<this->gih->getAcceptedConstraints().count()<<endl;
         cout<<"current row is: "<<this->currentSetUpConstraintListWidgetRow<<endl;
-        if((this->currentSetUpConstraintListWidgetRow+1)>this->gih->getAcceptedConstraints().count())
+        if(!this->isAcceptConstraint())
         {
             //is a reject constraint
             int offset=this->currentSetUpConstraintListWidgetRow-this->gih->getAcceptedConstraints().count();
@@ -114,6 +112,18 @@ void ConstraintChooserDialog::deleteConstraintSlot()
 
 void ConstraintChooserDialog::updateConstraintSlot()
 {
+    /*
+      quick and dirty method to update a constraint:
+      delete it and lets user recreate it with new parameters.
+
+    //QString name=this->ui->setupConstraintsListWidget->itemAt(this->currentRowChangedInSetUpConstraintListWidget)->text();
+    //bool isAccept=this->isAcceptConstraint();
+    //if(isAccept)
+    //    this->gih->removeAcceptedConstraint(this->currentSetUpConstraintListWidgetRow);
+    //else
+    //    this->gih->removeRejectedConstraint(this->currentSetUpConstraintListWidgetRow);
+    //this->gih->launchConstraintDialog(name, isAccept);
+    */
     loadSavedConstraints();
 }
 
@@ -147,5 +157,12 @@ void ConstraintChooserDialog::loadSavedConstraints()
             this->ui->setupConstraintsListWidget->addItem(value.toString());
         }
     }
+
+}
+
+bool
+ConstraintChooserDialog::isAcceptConstraint()
+{
+    return (this->currentSetUpConstraintListWidgetRow+1)>this->gih->getAcceptedConstraints().count();
 
 }

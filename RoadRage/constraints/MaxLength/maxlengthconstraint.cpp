@@ -41,3 +41,10 @@ QString MaxLengthConstraint::generateJSON()
                 "{'name': '%1', 'values':{'maxlength':%2}}"
                 ).arg("MaxLengthConstraint").arg(this->maxLength);
 }
+
+
+unsigned int
+MaxLengthConstraint::calculateSolutionScore(Path candidate)
+{
+    return this->isRespected(candidate)?this->maxLength:0;
+}

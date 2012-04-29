@@ -16,6 +16,7 @@ public:
     virtual void printName();
     virtual QString generateJSON();
     //virtual Constraint* createInstance();
+    virtual unsigned int calculateSolutionScore(Path candidate);
 };
 
 #endif // MAXLENGTHCONSTRAINT_H

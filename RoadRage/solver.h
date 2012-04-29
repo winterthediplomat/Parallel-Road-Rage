@@ -32,7 +32,6 @@ public:
 
     bool acceptSolution(Path candidate);
 
-
 };
 
 #endif // SOLVER_H

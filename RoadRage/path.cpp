@@ -88,8 +88,16 @@ QVector<QString> Path::namesRelatedToPath()
 
 QString Path::getNameByPoint(unsigned int point)
 {
+    //test per evitare possibili QVector::at exceptions.
     if(this->names.size()<point || point<0)
         return NULL;
     else
         return this->names.at(point);
+}
+
+int Path::getPointByName(QString name)
+{
+    if(this->names.contains(name))
+        return this->names.indexOf(name);
+    return -1;
 }

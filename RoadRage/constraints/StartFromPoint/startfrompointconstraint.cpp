@@ -37,3 +37,9 @@ StartFromPointConstraint::generateJSON()
                 "{'name': '%1', 'values':{'firstpoint':%2}}"
                 ).arg("StartFromPoint").arg(this->firstPoint);
 }
+
+unsigned int
+StartFromPointConstraint::calculateSolutionScore(Path candidate)
+{
+    return this->isRespected(candidate)?candidate.getNodes():0;
+}

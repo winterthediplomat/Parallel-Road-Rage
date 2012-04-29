@@ -16,6 +16,8 @@ public:
     void printName();
     bool isRespected(Path candidate);
     QString generateJSON();
+
+    virtual unsigned int calculateSolutionScore(Path candidate);
 };
 
 #endif // STARTFROMPOINT_H

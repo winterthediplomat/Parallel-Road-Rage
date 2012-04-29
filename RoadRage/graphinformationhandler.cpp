@@ -299,7 +299,7 @@ Node* GraphInformationHandler::getNodeByText(QString searchedText)
         if(manchurian_candidate->text()==searchedText)
             return manchurian_candidate;
     }*/
-    for(unsigned i=0; i<this->nodes.size(); i++)
+    for(unsigned i=0; i<(unsigned)this->nodes.size(); i++)
     {
         //cout<<searchedText.toStdString()<<"\t"<<(this->nodes.at(i)==NULL)<<endl;
         if(this->nodes.at(i)->text()==searchedText)
@@ -549,4 +549,32 @@ GraphInformationHandler::getLengthOfPath(Path examinedPath)
     }
     //cout<<"total length: "<<lengthOfPath<<endl;
     return lengthOfPath;
+}
+
+
+QVector<Node*>
+GraphInformationHandler::getExitNodes(Node *fromNodes)
+{
+    /*
+      this method returns nodes that are directly connected to
+      fromNode, in a relation
+      fromNode -> toNode
+    */
+    QVector<Node*> exitNodes;
+    foreach(Link* link, this->links)
+    {
+        if(link->fromNode()==fromNodes && link->distance()!=INT_MAX && link->distance()!=0)
+            exitNodes.push_back(link->toNode());
+    }
+    return exitNodes;
+}
+
+
+Path
+GraphInformationHandler::generateDefaultPath()
+{
+    Path newPath(this->nodes.size());
+    foreach(Node* node, this->nodes)
+        newPath.addName(node->text());
+    return newPath;
 }

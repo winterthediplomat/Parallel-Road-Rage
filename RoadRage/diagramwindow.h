@@ -44,9 +44,12 @@ private slots:
 
     void getBacktrackingTSPSlot();
     //void getDijkstraSlot();
+    void getFloodingSlot();
     void chooseConstraintSlot();
     //constraint slots
     //void setConstraintOnNodeSlot();
+    void testConstraintRespectSlot();
+    void testConstraintScoreSlot();
 
 private:
     typedef QPair<Node *, Node *> NodePair;
@@ -65,7 +68,7 @@ private:
     void switchNodes(Node *firstNode, Node *secondNode);
 
     QMenu *fileMenu;
-    QMenu *editMenu;
+    QMenu *editMenu;    
     QToolBar *editToolBar;
     QAction *exitAction;
     QAction *addNodeAction;
@@ -84,7 +87,8 @@ private:
     //added QMenus
     //QMenu *constraintMenu;
     QMenu *solverMenu;
-    QAction *setConstraintOnNodeAction;
+    //QAction *setConstraintOnNodeAction;
+    QMenu *testMenu;
 
     //added QActions
     QAction *generateReportAction;
@@ -97,7 +101,11 @@ private:
 
     QAction* getBacktrackingTSPAction;
     //QAction* getDijkstraAction;
+    QAction* getFloodingAction;
     QAction* chooseConstraintAction;
+
+    QAction* testConstraintRespect;
+    QAction* testConstraintScore;
 
     QGraphicsScene *scene;
     QGraphicsView *view;

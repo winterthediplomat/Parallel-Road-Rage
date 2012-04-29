@@ -19,6 +19,7 @@ public:
     //virtual void setGIH(GraphInformationHandler *gih);
     // void setGIH(GraphInformationHandler *gih);
     //virtual Constraint* createInstance();
+    virtual unsigned int calculateSolutionScore(Path candidate);
 };
 
 #endif // LASTPOINTCONNECTEDTOFIRSTCONSTRAINT_H

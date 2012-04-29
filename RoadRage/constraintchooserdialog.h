@@ -25,6 +25,7 @@ private:
     int currentSetUpConstraintListWidgetRow;
 
     void loadSavedConstraints();
+    bool isAcceptConstraint();
 
 private slots:
     void currentRowChangedInConstraintListWidget(int currentRow);

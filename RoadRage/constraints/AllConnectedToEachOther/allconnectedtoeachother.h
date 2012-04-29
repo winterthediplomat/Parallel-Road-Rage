@@ -18,6 +18,8 @@ public:
     virtual QString generateJSON();
     virtual bool needsGIH();
 
+    virtual unsigned int calculateSolutionScore(Path candidate);
+
 /*
 private:
     GraphInformationHandler *gih;

@@ -26,6 +26,10 @@ public:
     virtual void setGIH(GraphInformationHandler *gih);
     // void setGIH(GraphInformationHandler *gih);
     //virtual Constraint* createInstance();
+
+    //needed by GeneticEngine, and Constraint is the only one
+    //that can give this info.
+    virtual unsigned int calculateSolutionScore(Path candidate);
 };
 
 #endif // CONSTRAINT_H

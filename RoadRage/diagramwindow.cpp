@@ -16,6 +16,7 @@
 
 #include "path.h"
 #include "solvers/backtracking/btsolver.h"
+#include "solvers/genetic/geneticengine.h"
 //#include "constraints/AllDifferentElements/alldifferentelementsconstraint.h"
 //#include "constraints/MaxLength/maxlengthconstraint.h"
 
@@ -370,9 +371,21 @@ void DiagramWindow::createActions()
     //connect(getDijkstraAction, SIGNAL(triggered()),
     //        this, SLOT(getDijkstraSlot()));
 
+    this->getFloodingAction=new QAction(tr("launch flooding"), this);
+    connect(this->getFloodingAction, SIGNAL(triggered()),
+            this, SLOT(getFloodingSlot()));
+
     this->chooseConstraintAction=new QAction(tr("choose a constraint"), this);
     connect(this->chooseConstraintAction, SIGNAL(triggered()),
             this, SLOT(chooseConstraintSlot()));
+
+    this->testConstraintRespect=new QAction(tr("test constraint respect"), this);
+    connect(this->testConstraintRespect, SIGNAL(triggered()),
+            this, SLOT(testConstraintRespectSlot()));
+
+    this->testConstraintScore=new QAction(tr("test constraint score"), this);
+    connect(this->testConstraintScore, SIGNAL(triggered()),
+            this, SLOT(testConstraintScoreSlot()));
 
 }
 
@@ -403,6 +416,11 @@ void DiagramWindow::createMenus()
 
     solverMenu=menuBar()->addMenu(tr("&Solvers"));
     solverMenu->addAction(this->getBacktrackingTSPAction);
+    solverMenu->addAction(this->getFloodingAction);
+
+    testMenu=menuBar()->addMenu(tr("Testing"));
+    testMenu->addAction(this->testConstraintRespect);
+    testMenu->addAction(this->testConstraintScore);
 }
 
 void DiagramWindow::createToolBars()
@@ -804,4 +822,107 @@ void DiagramWindow::chooseConstraintSlot()
 {
     ConstraintChooserDialog ccd(this->gih, this);
     ccd.exec();
+}
+
+void
+DiagramWindow::getFloodingSlot()
+{
+    cout<<"è diventato Genetic Slot LOL"<<endl;
+/*
+    //just for test, going to replace it w/ a dialog
+    Node* startNode=this->gih->getNodes().at(0);
+
+    FloodingSolver fs(this->gih);
+    foreach(Constraint* accepted, this->gih->getAcceptedConstraints())
+        fs.addAcceptConstraint(accepted);
+    foreach(Constraint* rejected, this->gih->getRejectedConstraints())
+        fs.addRejectConstraint(rejected);
+    Path solution=fs.getBestSolution(startNode->text(), startNode->text());
+*/
+    GeneticEngine ge(50);
+    ge.setGIH(this->gih);
+    ge.setCrossover(20);
+    ge.setMutationProbability(0.1);
+    ge.setPopulationDimension(100); //it was: 30
+    ge.setNewIndividualsNumber(5);
+    foreach(Constraint *constr, this->gih->getAcceptedConstraints())
+        ge.addAcceptConstraint(constr);
+    foreach(Constraint *constr, this->gih->getRejectedConstraints())
+        ge.addRejectConstraint(constr);
+    QVector<Path> paths=ge.getBestPaths();
+    cout<<"terminate le generazioni, stampando i percorsi ammissibili"<<endl;
+    foreach(Path path, paths)
+        path.print();
+    cout<<"terminata l'esecuzione"<<endl;
+    QMessageBox::information(this, "Genetic Slot terminated!", "il risolutore genetico ha finito l'elaborazione");
+}
+
+void
+DiagramWindow::testConstraintRespectSlot()
+{
+    cout<<"testing bool Constraint::isRespected(Path)"<<endl;
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("QInputDialog::getText()"),
+                 tr("insert points (as numbers,\nseparated by semicolons)"), QLineEdit::Normal,
+                 QDir::home().dirName(), &ok);
+    if (ok && !text.isEmpty())
+    {
+        cout<<"generating Path obj"<<endl;
+        Path testedPath=this->gih->generateDefaultPath();
+        foreach(QString str, text.split(";"))
+        {
+            testedPath.appendPoint(str.toUInt());
+        }
+        cout<<"path is: ";
+        testedPath.print();
+        cout<<"accept constraints..."<<endl;
+        foreach(Constraint* constr, this->gih->getAcceptedConstraints())
+        {
+            constr->printName();
+            cout<<"result is: "<<constr->isRespected(testedPath)<<endl;
+        }
+        cout<<"reject constraints..."<<endl;
+        foreach(Constraint* constr, this->gih->getRejectedConstraints())
+        {
+            constr->printName();
+            cout<<"result is: "<<constr->isRespected(testedPath)<<endl;
+        }
+    }
+    else
+        cout<<"no path provided --> no job to do."<<endl;
+}
+
+void
+DiagramWindow::testConstraintScoreSlot()
+{
+    cout<<"testing unsigned int Constraint::calculateScore(Path)"<<endl;
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("QInputDialog::getText()"),
+                 tr("insert points (as numbers,\nseparated by semicolons)"), QLineEdit::Normal,
+                 QDir::home().dirName(), &ok);
+    if (ok && !text.isEmpty())
+    {
+        cout<<"generating Path obj"<<endl;
+        Path testedPath=this->gih->generateDefaultPath();
+        foreach(QString str, text.split(";"))
+        {
+            testedPath.appendPoint(str.toUInt());
+        }
+        cout<<"path is: ";
+        testedPath.print();
+        cout<<"accept constraints..."<<endl;
+        foreach(Constraint* constr, this->gih->getAcceptedConstraints())
+        {
+            constr->printName();
+            cout<<"result is: "<<constr->calculateSolutionScore(testedPath)<<endl;
+        }
+        cout<<"reject constraints..."<<endl;
+        foreach(Constraint* constr, this->gih->getRejectedConstraints())
+        {
+            constr->printName();
+            cout<<"result is: "<<constr->calculateSolutionScore(testedPath)<<endl;
+        }
+    }
+    else
+        cout<<"no path provided --> no job to do."<<endl;
 }

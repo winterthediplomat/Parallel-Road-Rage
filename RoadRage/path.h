@@ -38,6 +38,7 @@ public:
     void addName(QString name);
     QVector<QString> namesRelatedToPath();
     QString getNameByPoint(unsigned int point);
+    int getPointByName(QString name);
 };
 
 #endif // SOLUTION_H

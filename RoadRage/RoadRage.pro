@@ -37,7 +37,12 @@ SOURCES += main.cpp \
     constraints/StartFromPoint/startfrompointconstraint.cpp \
     constraints/StartFromPoint/startfrompointconstraintinterface.cpp \
     solvers/dijkstra/dijkstrasolver.cpp \
-    constraintdialog.cpp
+    constraintdialog.cpp \
+    solvers/genetic/geneticengine.cpp
+    #solvers/flooding/floodingsolver.cpp \
+    #solvers/flooding/floodingrouter.cpp \
+    #solvers/flooding/floodingrouternetknowledge.cpp \
+    #solvers/flooding/floodingpacket.cpp
 HEADERS += updatelinkdialog.h \
     ui_linkinfodialog.h \
     propertiesdialog.h \
@@ -68,7 +73,12 @@ HEADERS += updatelinkdialog.h \
     constraints/StartFromPoint/startfrompointconstraint.h \
     constraints/StartFromPoint/startfrompointconstraintinterface.h \
     solvers/dijkstra/dijkstrasolver.h \
-    constraintdialog.h
+    constraintdialog.h \
+    solvers/genetic/geneticengine.h
+    #solvers/flooding/floodingsolver.h \
+    #solvers/flooding/floodingrouter.h \
+    #solvers/flooding/floodingrouternetknowledge.h \
+    #solvers/flooding/floodingpacket.h
 OTHER_FILES += TODO.txt \
     testSalvataggio.txt
 FORMS += updatelinkdialog.ui \

@@ -1,6 +1,6 @@
 #ifndef GRAPHINFORMATIONHANDLER_H
 #define GRAPHINFORMATIONHANDLER_H
-//#include <QList>
+#include <QVector>
 #include <QList>
 #include <stdio.h>
 #include "link.h"
@@ -40,6 +40,7 @@ public:
     Node* getNodeByIndex(int index);
     Link* getTheLinkByNodes(Node* fromNode, Node* toNode);
     void updateLinkTrack();
+    QVector<Node*> getExitNodes(Node *fromNodes);
 /*
     void addLinksDescriptor(LinksDescriptor* newLinksDescriptor);
     LinksDescriptor* getLinksDescriptorByLinks(Link* first, Link* second);
@@ -67,6 +68,8 @@ public:
     //void launchSolverDialog(QString solverName);
 
     unsigned int getLengthOfPath(Path examinedPath);
+
+    Path generateDefaultPath();
 
 private:
     QList<Link *> links;

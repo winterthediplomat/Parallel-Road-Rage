@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'linkinfodialog.ui'
 **
-** Created: Sat 4. Jun 09:23:21 2011
-**      by: Qt User Interface Compiler version 4.6.2
+** Created: Mon 26. Mar 13:13:35 2012
+**      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -71,11 +71,13 @@ public:
 
         firstDistanceSpinBox = new QSpinBox(gridLayoutWidget_2);
         firstDistanceSpinBox->setObjectName(QString::fromUtf8("firstDistanceSpinBox"));
+        firstDistanceSpinBox->setMaximum(10000);
 
         gridLayout->addWidget(firstDistanceSpinBox, 2, 2, 1, 1);
 
         secondDistanceSpinBox = new QSpinBox(gridLayoutWidget_2);
         secondDistanceSpinBox->setObjectName(QString::fromUtf8("secondDistanceSpinBox"));
+        secondDistanceSpinBox->setMaximum(10000);
 
         gridLayout->addWidget(secondDistanceSpinBox, 4, 2, 1, 1);
 
