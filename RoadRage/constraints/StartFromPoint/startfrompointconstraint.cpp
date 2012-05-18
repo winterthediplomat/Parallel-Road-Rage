@@ -2,6 +2,7 @@
 
 StartFromPointConstraint::StartFromPointConstraint()
 {
+    this->setFirstPoint(0);
 }
 
 void

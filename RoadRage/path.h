@@ -39,6 +39,7 @@ public:
     QVector<QString> namesRelatedToPath();
     QString getNameByPoint(unsigned int point);
     int getPointByName(QString name);
+    void replace(unsigned int position, unsigned int value);
 };
 
 #endif // SOLUTION_H

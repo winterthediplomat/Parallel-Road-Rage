@@ -81,6 +81,7 @@ void ConstraintChooserDialog::deleteConstraintSlot()
         cout<<"current row is: "<<this->currentSetUpConstraintListWidgetRow<<endl;
         if(!this->isAcceptConstraint())
         {
+            cout<<"reject constraint!"<<endl;
             //is a reject constraint
             int offset=this->currentSetUpConstraintListWidgetRow-this->gih->getAcceptedConstraints().count();
             cout<<"offset: "<<offset<<endl;
@@ -90,6 +91,7 @@ void ConstraintChooserDialog::deleteConstraintSlot()
         }
         else
         {
+            cout<<"accept constraint!"<<endl;
             //is an accept constraint
             this->gih->removeAcceptedConstraint(
                         this->gih->getAcceptedConstraints().at(
@@ -129,11 +131,18 @@ void ConstraintChooserDialog::updateConstraintSlot()
 
 void ConstraintChooserDialog::loadSavedConstraints()
 {
+
     //deleting old data
+    /*
+      //FUUUUUUUU~, why are you modifying condition variable into the cycle?
     for(int row=0; row<this->ui->setupConstraintsListWidget->count(); row++)
         this->ui->setupConstraintsListWidget->removeItemWidget(
-                this->ui->setupConstraintsListWidget->item(row)
+                this->ui->setupConstraintsListWidget->item(0) //was: row
                 );
+    */
+    //GTFO, I'm going to play Global Thermonuclear War! (Wargame is the game!)
+    this->ui->setupConstraintsListWidget->clear();
+
 
     //now we can add new data!
     QVector<Constraint*> actualSavedConstraints=this->gih->getAcceptedConstraints();
@@ -163,6 +172,7 @@ void ConstraintChooserDialog::loadSavedConstraints()
 bool
 ConstraintChooserDialog::isAcceptConstraint()
 {
-    return (this->currentSetUpConstraintListWidgetRow+1)>this->gih->getAcceptedConstraints().count();
-
+    //accept constraints are put before the reject ones.
+    //we need to add 1 because 1>0 ;D
+    return (this->currentSetUpConstraintListWidgetRow+1)<this->gih->getAcceptedConstraints().count();
 }

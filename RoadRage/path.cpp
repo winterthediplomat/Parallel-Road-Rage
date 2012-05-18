@@ -101,3 +101,9 @@ int Path::getPointByName(QString name)
         return this->names.indexOf(name);
     return -1;
 }
+
+void
+Path::replace(unsigned int position, unsigned int value)
+{
+    this->path.replace(position, value);
+}

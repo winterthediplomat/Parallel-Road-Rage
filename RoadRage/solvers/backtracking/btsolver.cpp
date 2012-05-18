@@ -15,6 +15,7 @@ BTSolver::BTSolver() : Solver()
 
 void BTSolver::addNewSolutions(Path startSolution)
 {
+
     cout<<"adding a solution!"<<startSolution.getNodes()<<endl;
     for(unsigned int i=0; i<startSolution.getNodes(); i++)
     {
@@ -52,7 +53,7 @@ void BTSolver::getSolutions(Path startSolution, QVector<Path> *solutions)
     }
     do
     {
-        cout<<"dentro! "<<candidateSolutionsStack->size()<<endl;
+
         //get first element of the stack w/o deleting it
 
         //Path actualCandidate=candidateSolutionsStack->top();
@@ -61,13 +62,15 @@ void BTSolver::getSolutions(Path startSolution, QVector<Path> *solutions)
 
        #pragma omp critical
        {
+           cout<<"dentro! numero soluzioni parziali salvate: "<<candidateSolutionsStack->size()<<endl;
            //isRetrieved=true;
-           cout<< omp_get_thread_num() <<"retrieving a solution..."<<endl;
+           //cout<< omp_get_thread_num() <<"retrieving a solution..."<<endl;
            if(!candidateSolutionsStack->isEmpty())
            {
                //cout<<omp_get_thread_num()<<"retrieved!"<<endl;
                actualCandidate=candidateSolutionsStack->top();
                candidateSolutionsStack->pop();
+               //cout<<"retrieved!";
                //actualCandidate.print();
            }
            else
@@ -87,6 +90,7 @@ void BTSolver::getSolutions(Path startSolution, QVector<Path> *solutions)
            //cout<<"ok, this solution is interesting..."<<endl;
            if(!this->acceptSolution(actualCandidate))
            {
+                //#pragma omp critical
                 addNewSolutions(actualCandidate);
                 /*
                 #pragma omp critical
@@ -111,15 +115,16 @@ void BTSolver::getSolutions(Path startSolution, QVector<Path> *solutions)
                 solutionCounter++;
                 #pragma omp critical
                 {
-                    actualCandidate.print();
+                    //actualCandidate.print();
                     solutions->append(actualCandidate);
                 }
             }
         }
         else
         {
-            /*cout<<"rejected solution!"<<endl;
-            for(int pos=0; pos<actualCandidate.getPath().size();
+            //cout<<"rejected solution! ";
+            //actualCandidate.print();
+            /*for(int pos=0; pos<actualCandidate.getPath().size();
                 pos++)
                 cout<<actualCandidate.getPath().at(pos);
             cout<<endl;*/
@@ -131,8 +136,7 @@ void BTSolver::getSolutions(Path startSolution, QVector<Path> *solutions)
     //new solutions while others wait there, and
     //candidateSolutionsStack is not empty.
     #pragma omp barrier
-    cout<<"ok, over the barrier! "<<omp_get_thread_num()<<endl;
-
+    cout<<"ok, over the barrier! thread_num:"<<omp_get_thread_num()<<endl;
     }while(!candidateSolutionsStack->isEmpty());
 } //end #pragma omp parallel
     cout<<"fuori"<<endl;

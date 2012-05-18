@@ -68,5 +68,5 @@ unsigned int Constraint::calculateSolutionScore(Path candidate)
       (e.g 1321 --> 3, 1111 --> 1, 1234 --> 4=N )
     */
     cout<<":yaoming: on Constraint::calculateSolutionScore(Path)"<<endl;
-    return INT_MAX;
+    return 0;
 }

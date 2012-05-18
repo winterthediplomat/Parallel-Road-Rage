@@ -38,7 +38,9 @@ SOURCES += main.cpp \
     constraints/StartFromPoint/startfrompointconstraintinterface.cpp \
     solvers/dijkstra/dijkstrasolver.cpp \
     constraintdialog.cpp \
-    solvers/genetic/geneticengine.cpp
+    solvers/genetic/geneticengine.cpp \
+    solutiontestingdialog.cpp
+    #solvers/nearestNeighbours/nearestneighbour.cpp
     #solvers/flooding/floodingsolver.cpp \
     #solvers/flooding/floodingrouter.cpp \
     #solvers/flooding/floodingrouternetknowledge.cpp \
@@ -74,7 +76,9 @@ HEADERS += updatelinkdialog.h \
     constraints/StartFromPoint/startfrompointconstraintinterface.h \
     solvers/dijkstra/dijkstrasolver.h \
     constraintdialog.h \
-    solvers/genetic/geneticengine.h
+    solvers/genetic/geneticengine.h \
+    solutiontestingdialog.h
+    #solvers/nearestNeighbours/nearestneighbour.h
     #solvers/flooding/floodingsolver.h \
     #solvers/flooding/floodingrouter.h \
     #solvers/flooding/floodingrouternetknowledge.h \
@@ -88,7 +92,8 @@ FORMS += updatelinkdialog.ui \
     nodesselectordialog.ui \
     constraints/MaxLength/maxlengthconstraintdialog.ui \
     constraintchooserdialog.ui \
-    constraintpositionchooserdialog.ui
+    constraintpositionchooserdialog.ui \
+    solutiontestingdialog.ui
 #RESOURCES +=
 
 QMAKE_CXXFLAGS += -fopenmp

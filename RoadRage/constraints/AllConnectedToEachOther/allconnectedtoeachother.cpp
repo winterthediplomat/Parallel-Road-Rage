@@ -15,7 +15,7 @@ void AllConnectedToEachOther::setGIH(GraphInformationHandler *gih)
     //cout<<gih<<endl;
     this->gih=gih;
     //cout<<"saved address of gih is:"<<this->gih<<endl;
-    Node *lol=this->gih->getNodeByText("Node 1");
+    //Node *lol=this->gih->getNodeByText("Node 1");
     //cout<<"lolnode has address: "<<lol<<endl;
     //Q_ASSERT_X(this->gih==gih, "AllConnectedToEachOther::setGIHobj", "given address and saved one are not equal!");
 }
@@ -48,6 +48,7 @@ bool AllConnectedToEachOther::isRespected(Path candidate)
     bool allConnected=true;
     int candidateNodeNum=candidate.getPath().size();
 
+#pragma omp parallel for
     for(int index=0; index<candidateNodeNum-1; index++)
     {
         firstNode=candidate.getPath().at(index);
@@ -96,7 +97,7 @@ unsigned int AllConnectedToEachOther::calculateSolutionScore(Path candidate)
     Link* the_link=NULL;
     unsigned int connections=0;
     bool allConnected=true;
-    int candidateNodeNum=candidate.getNodes();
+    int candidateNodeNum=candidate.getPath().size();
     for(int index=0; index<candidateNodeNum-1; index++)
     {
         firstNode=candidate.getPath().at(index);
@@ -117,16 +118,17 @@ unsigned int AllConnectedToEachOther::calculateSolutionScore(Path candidate)
         {
 
             //cout<<"distance of link is: "<<the_link->distance()<<endl;
-            if(the_link->distance()==INT_MAX || the_link->distance()==0)
-                allConnected=false;
+            if(!(the_link->distance()==INT_MAX || the_link->distance()==0))
+                connections++;
+
             Q_ASSERT_X(the_link->fromNode()==this->gih->getNodeByText(firstNodeName), "all connected -> is respected", "lolwut?");
             Q_ASSERT_X(the_link->toNode()==this->gih->getNodeByText(secondNodeName), "all connected -> is respected", "lolwut?");
-            if(allConnected)
-                connections++;
+            //if(allConnected)
+            //    connections++;
         }
     }
-    //in order to get full score (N=#nodes)
-    if(connections==this->gih->getNodes().size()-1)
+    //in order to get full score (N=#nodes in solution)
+    if(connections==candidateNodeNum-1)
         connections++;
     return connections;
 }

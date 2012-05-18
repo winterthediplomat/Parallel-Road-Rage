@@ -574,6 +574,7 @@ Path
 GraphInformationHandler::generateDefaultPath()
 {
     Path newPath(this->nodes.size());
+    Q_ASSERT(newPath.getNodes()==this->nodes.size());
     foreach(Node* node, this->nodes)
         newPath.addName(node->text());
     return newPath;
