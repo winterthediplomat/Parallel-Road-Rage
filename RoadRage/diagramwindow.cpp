@@ -372,7 +372,7 @@ void DiagramWindow::createActions()
     //connect(getDijkstraAction, SIGNAL(triggered()),
     //        this, SLOT(getDijkstraSlot()));
 
-    this->getFloodingAction=new QAction(tr("launch flooding"), this);
+    this->getFloodingAction=new QAction(tr("launch Genetic Engine"), this);
     connect(this->getFloodingAction, SIGNAL(triggered()),
             this, SLOT(getFloodingSlot()));
 
@@ -843,10 +843,13 @@ DiagramWindow::getFloodingSlot()
 
     //pop:100, crossover:20, gen:50, foreign:5
     //pop:50, crossover:10, gen:60, foreign:5
-    GeneticEngine ge(100);
+    //it was: 100
+    int n=this->gih->getNodes().size();
+    GeneticEngine ge(25*n);
     ge.setGIH(this->gih);
     ge.setCrossover(200/*30*/);
     ge.setMutationProbability(0.01);
+    //it was: 1067
     ge.setPopulationDimension(1067/*100*/);
     ge.setNewIndividualsNumber(20/*5*/);
     ge.setElitismNumber(50);

@@ -4,7 +4,7 @@
 #include <ctime>
 
 #include <omp.h>
-#include <algorithm>
+//#include <algorithm>
 
 GeneticEngine::GeneticEngine(unsigned int generations)
 {
@@ -176,12 +176,6 @@ GeneticEngine::sortPopulation(QVector<Path>* population, QVector<unsigned int>* 
                               unsigned int itemsNo, bool sortBetter)
 {
     /*
-      //from now (15-5-2012 1532) this comment is outdated.
-    //it's not a real sort, just searching best(or worst) m individuals
-    //and we don't care about others, so we don't have to spend O(n**2)
-    //when we can use O(n*m) AND n>>m.
-
-
     //for m times we select best of the population
     //first time we select the 1st and put it into 1st place
     //second time we select the 1st best of the remaining and put it at 2nd place
@@ -190,7 +184,9 @@ GeneticEngine::sortPopulation(QVector<Path>* population, QVector<unsigned int>* 
     int bestPosition[omp_get_max_threads()];
 
     //for(int pos=0; pos<this->crossover+this->newIndividualsNumber; pos++)
-    for(int pos=0; pos<population->size(); pos++)
+    //int pos=sortBetter?population->size()-itemsNo:0;
+    //unsigned int maxItems=sortBetter?population->size():itemsNo;
+    for(int pos=0; pos<itemsNo; pos++)
     {
 
         for(int threadIndex=0; threadIndex<omp_get_max_threads(); threadIndex++)
@@ -216,6 +212,7 @@ GeneticEngine::sortPopulation(QVector<Path>* population, QVector<unsigned int>* 
 
         int bestPos=bestPosition[0];
         //fare una ricerca del massimo all'interno dell'array
+        //delle posizioni migliori
         for(int i=1; i<omp_get_max_threads(); i++)
         {    if(sortBetter)
                 sortingCondition=scoreOfPopulation->at(bestPos)
@@ -291,6 +288,7 @@ GeneticEngine::getBestPaths()
     this->initializePopulation(population, this->populationDimension);
     QVector<unsigned int> *scoreOfPopulation=new QVector<unsigned int>(population->size());
     double average=0, start, end;
+    QVector<Path> *children=new QVector<Path>;
     for(unsigned int times=0; times<this->generations; times++)
     {
         start=omp_get_wtime();
@@ -301,7 +299,8 @@ GeneticEngine::getBestPaths()
         {
             cout<<"mutation of some individuals"<<endl;
 
-            this->mutatePopulation(population);
+            //this->mutatePopulation(population);
+            this->mutatePopulation(children);
             cout<<"end of the mutation"<<endl;
         }
 
@@ -332,14 +331,15 @@ GeneticEngine::getBestPaths()
         //we just take best individuals...
         cout<<"sorting (D:) population"<<endl;
         double start_sort=omp_get_wtime();
+        //mmm... I think we need a smarter sort algorithm. maybe in PaRR2.
         this->sortPopulation(population, scoreOfPopulation, population->size());
         double end_sort=omp_get_wtime();
-        cout<<"tempo per il sort -parola grossa D:-: "<<end_sort-start_sort<<endl;
+        cout<<"tempo per il sort: "<<end_sort-start_sort<<endl;
         //... and kill who is not strong enough to survive.
         if(times+1!=this->generations)
         {
 
-            QVector<Path> *children=new QVector<Path>;
+            children=new QVector<Path>;
             //people are mating.
             cout<<"people are mating."<<endl;
             double start_gen=omp_get_wtime();
@@ -360,9 +360,10 @@ GeneticEngine::getBestPaths()
         }
         end=omp_get_wtime();
         cout<<end-start<<"seconds were spent on the calculation of this generation"<<endl;
-        average=(average+(end-start))/2.0;
+        average+=(end-start);
     }
-    //now sort just best solutions and delete the others.
+    //stats info (debugging/profiling purposes)
+    average/=this->generations;
     cout<<"average time for generation: "<<average<<", generations: ";
     cout<<this->generations<<endl;
     return *population;

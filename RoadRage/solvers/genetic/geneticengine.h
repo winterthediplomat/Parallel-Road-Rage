@@ -28,6 +28,8 @@ private:
 
     void sortPopulation(QVector<Path> *population, QVector<unsigned int> *scoreOfPopulation,
                         unsigned int itemsNo=-1, bool sortBetter=false);
+    void sortPopulationAtLast(QVector<Path> *population, QVector<unsigned int> *scoreOfPopulation,
+                        unsigned int itemsNo=-1, bool sortBetter=false);
     void killIndividualsWithLowFitness(QVector<Path>* population);
     void generateChildren(QVector<Path>* population, QVector<Path>* children);
     void mutatePopulation(QVector<Path>* population);
@@ -39,6 +41,7 @@ private:
     void populationStats(QVector<Path>* population, QVector<unsigned int>* scoreOfPopulation);
 
     int compareSolutions(Path first, Path last);
+
 
     float mutationProbability;
     unsigned int crossover;
