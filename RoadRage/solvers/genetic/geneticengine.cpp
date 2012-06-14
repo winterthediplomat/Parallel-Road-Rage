@@ -12,6 +12,8 @@ GeneticEngine::GeneticEngine(unsigned int generations)
     this->elitistsNumber=0;
     this->crossover=0;
     this->gih=NULL;
+    this->population=new QVector<Path>;
+    this->scoreOfPopulation=new QVector<unsigned int>;
 }
 
 void
@@ -105,6 +107,7 @@ GeneticEngine::initializePopulation(QVector<Path> *population,
         //actualPath=this->convertAddressToPath(rand()%pow(itemsNo, itemsNo), itemsNo);
         actualPath=this->generateRandomPath(itemsNo);
         population->append(actualPath);
+        this->scoreOfPopulation->append(0);
     }
 }
 
@@ -284,9 +287,11 @@ GeneticEngine::killIndividualsWithLowFitness(QVector<Path>* population)
 QVector<Path>
 GeneticEngine::getBestPaths()
 {
-    QVector<Path> *population=new QVector<Path>;
+    //replaced by instance variable
+    //QVector<Path> *population=new QVector<Path>;
     this->initializePopulation(population, this->populationDimension);
-    QVector<unsigned int> *scoreOfPopulation=new QVector<unsigned int>(population->size());
+    //replaced by instance variable
+    //QVector<unsigned int> *scoreOfPopulation=new QVector<unsigned int>(population->size());
     double average=0, start, end;
     QVector<Path> *children=new QVector<Path>;
     for(unsigned int times=0; times<this->generations; times++)
@@ -365,7 +370,7 @@ GeneticEngine::getBestPaths()
     //stats info (debugging/profiling purposes)
     average/=this->generations;
     cout<<"average time for generation: "<<average<<", generations: ";
-    cout<<this->generations<<endl;
+    cout<<this->generations<<" total time: "<<average*this->generations<<endl;
     return *population;
 }
 
@@ -430,4 +435,16 @@ GeneticEngine::compareSolutions(Path first, Path last)
     else if(scores.at(0)==scores.at(1))
         return 0;
     return -1;
+}
+
+QVector<Path>
+GeneticEngine::getPopulation()
+{
+    return *this->population;
+}
+
+QVector<unsigned int>
+GeneticEngine::getScores()
+{
+    return *this->scoreOfPopulation;
 }

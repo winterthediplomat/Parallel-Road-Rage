@@ -849,7 +849,6 @@ DiagramWindow::getFloodingSlot()
     ge.setGIH(this->gih);
     ge.setCrossover(200/*30*/);
     ge.setMutationProbability(0.01);
-    //it was: 1067
     ge.setPopulationDimension(1067/*100*/);
     ge.setNewIndividualsNumber(20/*5*/);
     ge.setElitismNumber(50);
@@ -857,10 +856,13 @@ DiagramWindow::getFloodingSlot()
         ge.addAcceptConstraint(constr);
     foreach(Constraint *constr, this->gih->getRejectedConstraints())
         ge.addRejectConstraint(constr);
-    QVector<Path> paths=ge.getBestPaths();
-    cout<<"terminate le generazioni, stampando i percorsi ammissibili"<<endl;
-    foreach(Path path, paths)
-        path.print();
+    ge.getBestPaths();
+    for(unsigned int i=0; i<10; i++)
+    {
+        Path p=ge.getPopulation().at(ge.getPopulationDimension()-1-i);
+        p.print();
+        cout<<"score of this solution is: "<<ge.getScores().at(ge.getPopulationDimension()-1-i)<<endl;
+    }
     cout<<"terminata l'esecuzione"<<endl;
     QMessageBox::information(this, "Genetic Slot terminated!", "il risolutore genetico ha finito l'elaborazione");
 }

@@ -20,6 +20,8 @@ public:
     unsigned int getElitismNumber();
 
     QVector<Path> getBestPaths();
+    QVector<Path> getPopulation();
+    QVector<unsigned int> getScores();
 
 private:
 
@@ -50,6 +52,9 @@ private:
     unsigned int newIndividualsNumber;
     unsigned int elitistsNumber;
     GraphInformationHandler *gih;
+
+    QVector<unsigned int> *scoreOfPopulation;
+    QVector<Path> *population;
 };
 
 #endif // GENETICENGINE_H

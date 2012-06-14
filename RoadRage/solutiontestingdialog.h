@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "graphinformationhandler.h"
+#include <QListWidgetItem>
 
 namespace Ui {
 class SolutionTestingDialog;
@@ -24,9 +25,13 @@ private:
     GraphInformationHandler *gih;
     bool isScoreCalculation;
 
+    Path generatePathFromString(QString givenPath);
+
 private slots:
     void on_addSolutionPushButton_clicked();
     void on_helpPushButton_clicked();
+    void on_solutionListWidget_itemClicked(QListWidgetItem* item);
+
 };
 
 #endif // SOLUTIONTESTINGDIALOG_H

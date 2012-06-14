@@ -48,7 +48,7 @@ bool AllConnectedToEachOther::isRespected(Path candidate)
     bool allConnected=true;
     int candidateNodeNum=candidate.getPath().size();
 
-#pragma omp parallel for
+//#pragma omp parallel for
     for(int index=0; index<candidateNodeNum-1; index++)
     {
         firstNode=candidate.getPath().at(index);
@@ -70,8 +70,8 @@ bool AllConnectedToEachOther::isRespected(Path candidate)
             //cout<<"distance of link is: "<<the_link->distance()<<endl;
             if(the_link->distance()==INT_MAX || the_link->distance()==0)
                 allConnected=false;
-            Q_ASSERT_X(the_link->fromNode()==this->gih->getNodeByText(firstNodeName), "all connected -> is respected", "lolwut?");
-            Q_ASSERT_X(the_link->toNode()==this->gih->getNodeByText(secondNodeName), "all connected -> is respected", "lolwut?");
+            Q_ASSERT_X(the_link->fromNode()==this->gih->getNodeByText(firstNodeName), "all connected::is respected", QString("lolwut? from node: %1").arg(firstNodeName).toStdString().c_str());
+            Q_ASSERT_X(the_link->toNode()==this->gih->getNodeByText(secondNodeName), "all connected::is respected", QString("lolwut? to node %1").arg(secondNodeName).toStdString().c_str());
         }
     }
     //return false;
