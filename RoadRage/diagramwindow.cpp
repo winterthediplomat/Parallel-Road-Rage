@@ -874,6 +874,9 @@ DiagramWindow::testConstraintRespectSlot()
     std.setGIH(this->gih);
     std.scoreCalculation(false);
     std.exec();
+    //fixin' issue: graph remains blue when SolutionTestingDialog is closed
+    foreach(Link *link, this->gih->getLinks())
+        link->setColor(Qt::darkRed);
 }
 
 void
@@ -883,4 +886,7 @@ DiagramWindow::testConstraintScoreSlot()
     std.setGIH(this->gih);
     std.scoreCalculation(true);
     std.exec();
+    //fixin' issue: graph remains blue when SolutionTestingDialog is closed
+    foreach(Link *link, this->gih->getLinks())
+        link->setColor(Qt::darkRed);
 }

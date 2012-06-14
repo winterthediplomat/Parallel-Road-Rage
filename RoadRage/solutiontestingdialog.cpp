@@ -75,6 +75,15 @@ SolutionTestingDialog::on_helpPushButton_clicked()
 void
 SolutionTestingDialog::on_solutionListWidget_itemClicked(QListWidgetItem* item)
 {
+
+    //fixin' issue: old blue links are blue even when changing path to visualize
+    foreach(Link *link, this->gih->getLinks())
+    {
+        link->setColor(Qt::darkRed);
+        link->setZValue(-1);
+        link->trackNodes();
+    }
+
     unsigned int arrowPosition=item->text().indexOf(" -->");
     QString pathStringFromItem=item->text();
     pathStringFromItem.chop(item->text().size()-arrowPosition);
